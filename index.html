@@ -11,44 +11,55 @@
   <body>
     <main class="explorer">
       <header class="page-header">
-        <h1>Binary Pixel Colour Explorer</h1>
+        <h1 data-i18n="title">Binary Pixel Colour Explorer</h1>
+        <div class="header-actions">
+          <button id="language-toggle" class="header-control" type="button" aria-label="Switch to Spanish">ES</button>
+          <button id="help-open" class="header-control" type="button" aria-label="Help" aria-haspopup="dialog" aria-controls="help-dialog">?</button>
+        </div>
       </header>
 
       <fieldset class="depth-selector">
-        <legend>Colour depth (bits per pixel)</legend>
+        <legend data-i18n="depthTitle">Colour depth (bits per pixel)</legend>
         <div class="depth-options">
-          <label class="depth-option"><input type="radio" name="depth" value="1"><span>1 bit</span></label>
-          <label class="depth-option"><input type="radio" name="depth" value="3" checked><span>3 bits</span></label>
-          <label class="depth-option"><input type="radio" name="depth" value="8"><span>8 bits</span></label>
-          <label class="depth-option"><input type="radio" name="depth" value="24"><span>24 bits</span></label>
+          <label class="depth-option"><input type="radio" name="depth" value="1"><span data-i18n="depth1">1 bit</span></label>
+          <label class="depth-option"><input type="radio" name="depth" value="3" checked><span data-i18n="depth3">3 bits</span></label>
+          <label class="depth-option"><input type="radio" name="depth" value="8"><span data-i18n="depth8">8 bits</span></label>
+          <label class="depth-option"><input type="radio" name="depth" value="24"><span data-i18n="depth24">24 bits</span></label>
         </div>
       </fieldset>
 
       <div class="diagram" id="diagram">
         <svg id="wiring" class="wiring" aria-hidden="true" focusable="false"></svg>
         <section class="result" aria-labelledby="result-title">
-          <h2 id="result-title">Resulting pixel</h2>
+          <h2 id="result-title" data-i18n="resultTitle">Resulting pixel</h2>
           <div id="pixel-swatch" class="pixel-swatch" role="img" aria-label="Resulting pixel: #000000"></div>
           <p id="colour-output" class="colour-output" role="status" aria-live="polite" aria-atomic="true">
-            <span>RGB: <strong id="rgb-value">rgb(0, 0, 0)</strong></span>
-            <span>Hex: <strong id="hex-value">#000000</strong></span>
+            <span><span data-i18n="rgbLabel">RGB colour:</span> <strong id="rgb-value">rgb(0, 0, 0)</strong></span>
+            <span><span data-i18n="hexLabel">Hexadecimal colour:</span> <strong id="hex-value">#000000</strong></span>
           </p>
         </section>
 
         <section class="channels" aria-labelledby="channels-title">
-          <h2 id="channels-title">RGB channels</h2>
+          <h2 id="channels-title" data-i18n="channelsTitle">RGB channels</h2>
           <div class="channel-values">
-            <p class="channel channel-red"><span>Red (R)</span><span class="bulb" data-bulb="r" aria-hidden="true"></span><strong data-channel-value="r">0</strong></p>
-            <p class="channel channel-green"><span>Green (G)</span><span class="bulb" data-bulb="g" aria-hidden="true"></span><strong data-channel-value="g">0</strong></p>
-            <p class="channel channel-blue"><span>Blue (B)</span><span class="bulb" data-bulb="b" aria-hidden="true"></span><strong data-channel-value="b">0</strong></p>
+            <p class="channel channel-red"><span><span data-i18n="red">Red</span> (R)</span><span class="bulb" data-bulb="r" aria-hidden="true"></span><strong data-channel-value="r">0</strong></p>
+            <p class="channel channel-green"><span><span data-i18n="green">Green</span> (G)</span><span class="bulb" data-bulb="g" aria-hidden="true"></span><strong data-channel-value="g">0</strong></p>
+            <p class="channel channel-blue"><span><span data-i18n="blue">Blue</span> (B)</span><span class="bulb" data-bulb="b" aria-hidden="true"></span><strong data-channel-value="b">0</strong></p>
           </div>
         </section>
 
         <section class="bits-panel" aria-labelledby="bits-title">
-          <h2 id="bits-title">Binary switches</h2>
+          <h2 id="bits-title" data-i18n="switchesTitle">Binary switches</h2>
           <div id="switch-groups" class="switch-groups"></div>
         </section>
       </div>
+      <dialog id="help-dialog" aria-labelledby="help-title" aria-describedby="help-general">
+        <h2 id="help-title" data-i18n="helpTitle">How the explorer works</h2>
+        <p id="help-general" data-i18n="helpGeneral"></p>
+        <h3 data-i18n="helpModeTitle">Current colour depth</h3>
+        <p id="help-mode"></p>
+        <button id="help-close" class="header-control" type="button" data-i18n="closeHelp">Close help</button>
+      </dialog>
     </main>
   </body>
 </html>

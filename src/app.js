@@ -1,7 +1,8 @@
 import { calculateColour, changeColourDepth, createColourState } from './colour-model.js';
 import { renderWiring } from './wiring.js';
+import { getTranslations, pixelDescription, switchDescription } from './translations.js';
 
-const channelNames = ['Red', 'Green', 'Blue'];
+const channelNames = ['red', 'green', 'blue'];
 const channelKeys = ['r', 'g', 'b'];
 const glowColours = ['230, 35, 55', '25, 180, 80', '40, 95, 240'];
 const widthsByDepth = {
@@ -22,6 +23,18 @@ const channelValues = channelKeys.map((key) =>
 const bulbElements = channelKeys.map((key) => document.querySelector(`[data-bulb="${key}"]`));
 const diagram = document.querySelector('#diagram');
 const wiring = document.querySelector('#wiring');
+const languageToggle = document.querySelector('#language-toggle');
+const helpOpen = document.querySelector('#help-open');
+const helpDialog = document.querySelector('#help-dialog');
+const helpClose = document.querySelector('#help-close');
+const helpMode = document.querySelector('#help-mode');
+
+let language = 'en';
+try {
+  if (sessionStorage.getItem('colour-explorer-language') === 'es') language = 'es';
+} catch {
+  // The explorer still works when browser storage is disabled.
+}
 
 let wiringFrame = 0;
 
@@ -35,10 +48,38 @@ function scheduleWiring() {
 
 let state = createColourState(Number(document.querySelector('input[name="depth"]:checked').value));
 
+function renderLanguage() {
+  const text = getTranslations(language);
+  document.documentElement.lang = language;
+  document.title = text.title;
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    element.textContent = text[element.dataset.i18n];
+  });
+  languageToggle.textContent = text.languageTarget;
+  languageToggle.setAttribute('aria-label', text.languageAction);
+  helpOpen.setAttribute('aria-label', text.helpButton);
+  helpMode.textContent = text[`help${state.depth}`];
+
+  switchGroups.querySelectorAll('.bit-group').forEach((group) => {
+    const channel = group.dataset.channel === 'all'
+      ? 'monochrome'
+      : channelNames[channelKeys.indexOf(group.dataset.channel)];
+    group.querySelector('legend').textContent = text[channel];
+    group.querySelectorAll('.bit-switch').forEach((button, index) => {
+      const enabled = state.bits[Number(button.dataset.bitIndex)] === 1;
+      button.setAttribute('aria-label', switchDescription(language, channel, index + 1,
+        Number(group.dataset.width), enabled));
+      button.querySelector('.bit-index').textContent = `${text.bit} ${index + 1}`;
+    });
+  });
+  renderResult();
+  scheduleWiring();
+}
+
 function renderResult() {
   const { r, g, b, hex } = calculateColour(state.depth, state.bits);
   swatch.style.backgroundColor = hex;
-  swatch.setAttribute('aria-label', `Resulting pixel: ${hex}`);
+  swatch.setAttribute('aria-label', pixelDescription(language, hex));
   rgbValue.textContent = `rgb(${r}, ${g}, ${b})`;
   hexValue.textContent = hex;
   [r, g, b].forEach((value, index) => {
@@ -60,12 +101,12 @@ function createSwitch(index, position, width, channelName) {
   button.dataset.bitIndex = index;
   button.setAttribute('role', 'switch');
   button.setAttribute('aria-checked', 'false');
-  button.setAttribute('aria-label', `${channelName} bit ${position} of ${width}`);
+  button.setAttribute('aria-label', switchDescription(language, channelName, position, width, false));
 
   const bitIndex = document.createElement('span');
   bitIndex.className = 'bit-index';
   bitIndex.setAttribute('aria-hidden', 'true');
-  bitIndex.textContent = `Bit ${position}`;
+  bitIndex.textContent = `${getTranslations(language).bit} ${position}`;
 
   const track = document.createElement('span');
   track.className = 'switch-track';
@@ -88,14 +129,14 @@ function renderSwitches() {
 
   widthsByDepth[state.depth].forEach((width, channelIndex) => {
     const name = state.depth === 1
-      ? 'Monochrome (all RGB channels)'
+      ? 'monochrome'
       : channelNames[channelIndex];
     const group = document.createElement('fieldset');
     group.className = 'bit-group';
     group.dataset.width = width;
     group.dataset.channel = state.depth === 1 ? 'all' : channelKeys[channelIndex];
     const legend = document.createElement('legend');
-    legend.textContent = name;
+    legend.textContent = getTranslations(language)[name];
 
     const grid = document.createElement('div');
     grid.className = 'bit-grid';
@@ -123,6 +164,13 @@ switchGroups.addEventListener('click', (event) => {
   state = { ...state, bits };
 
   button.setAttribute('aria-checked', String(bits[index] === 1));
+  const group = button.closest('.bit-group');
+  const channel = group.dataset.channel === 'all'
+    ? 'monochrome'
+    : channelNames[channelKeys.indexOf(group.dataset.channel)];
+  const position = [...group.querySelectorAll('.bit-switch')].indexOf(button) + 1;
+  button.setAttribute('aria-label', switchDescription(language, channel, position,
+    Number(group.dataset.width), bits[index] === 1));
   button.querySelector('.bit-digit').textContent = String(bits[index]);
   renderResult();
 });
@@ -132,12 +180,26 @@ depthInputs.forEach((input) => {
     if (!input.checked) return;
     state = changeColourDepth(state, Number(input.value));
     renderSwitches();
-    renderResult();
+    renderLanguage();
   });
 });
 
+languageToggle.addEventListener('click', () => {
+  language = language === 'en' ? 'es' : 'en';
+  try {
+    sessionStorage.setItem('colour-explorer-language', language);
+  } catch {
+    // Storage restrictions must not prevent switching languages.
+  }
+  renderLanguage();
+});
+
+helpOpen.addEventListener('click', () => helpDialog.showModal());
+helpClose.addEventListener('click', () => helpDialog.close());
+helpDialog.addEventListener('close', () => helpOpen.focus());
+
 renderSwitches();
-renderResult();
+renderLanguage();
 
 const resizeObserver = new ResizeObserver(scheduleWiring);
 [diagram, swatch, switchGroups, ...bulbElements].forEach((element) => resizeObserver.observe(element));

@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/colour-model.test.js"
+    "start": "node scripts/dev-server.js",
+    "test": "node --test tests/colour-model.test.js tests/wiring.test.js tests/translations.test.js"
   }
 }
