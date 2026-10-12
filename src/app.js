@@ -1,4 +1,5 @@
 import { calculateColour, changeColourDepth, colourStateFromHex, colourStateFromRgb, createColourState } from './colour-model.js';
+import { hueFromPoint, hsvToRgb, rgbToHsv } from './colour-picker-model.js';
 import { renderWiring } from './wiring.js';
 import { getTranslations, pixelDescription, switchDescription, switchStateLabel } from './translations.js';
 
@@ -32,6 +33,13 @@ const helpOpen = document.querySelector('#help-open');
 const helpDialog = document.querySelector('#help-dialog');
 const helpClose = document.querySelector('#help-close');
 const helpMode = document.querySelector('#help-mode');
+const pickerDialog = document.querySelector('#picker-dialog');
+const hueRing = document.querySelector('#picker-hue');
+const saturationInput = document.querySelector('#picker-saturation');
+const brightnessInput = document.querySelector('#picker-brightness');
+const pickerPreview = document.querySelector('#picker-preview');
+const pickerHex = document.querySelector('#picker-hex');
+const pickerClose = document.querySelector('#picker-close');
 
 let language = 'en';
 try {
@@ -52,6 +60,8 @@ function scheduleWiring() {
 
 let state = createColourState(Number(document.querySelector('input[name="depth"]:checked').value));
 let errorInput = null;
+let pickerHsv = { h: 0, s: 0, v: 0 };
+let huePointer = null;
 
 function showEditorError(input) {
   if (errorInput && errorInput !== input) {
@@ -78,6 +88,14 @@ function clearEditorDrafts() {
   showEditorError(null);
 }
 
+function applyColourState(next) {
+  state = next;
+  clearEditorDrafts();
+  depthInputs.forEach((radio) => { radio.checked = Number(radio.value) === state.depth; });
+  renderSwitches();
+  renderLanguage();
+}
+
 function commitEditor(input) {
   try {
     let next;
@@ -92,11 +110,7 @@ function commitEditor(input) {
       colour[input.id.slice(-1)] = Number(raw);
       next = colourStateFromRgb(colour.r, colour.g, colour.b);
     }
-    state = next;
-    clearEditorDrafts();
-    depthInputs.forEach((radio) => { radio.checked = Number(radio.value) === state.depth; });
-    renderSwitches();
-    renderLanguage();
+    applyColourState(next);
   } catch (error) {
     if (!(error instanceof TypeError || error instanceof RangeError)) throw error;
     input.dataset.dirty = 'true';
@@ -154,6 +168,7 @@ function renderLanguage() {
     input.setAttribute('aria-label', text[['redInput', 'greenInput', 'blueInput', 'hexInput'][index]]);
   });
   if (errorInput) showEditorError(errorInput);
+  renderPickerControls();
 
   switchGroups.querySelectorAll('.bit-group').forEach((group) => {
     const channel = group.dataset.channel === 'all'
@@ -179,6 +194,8 @@ function renderResult() {
   swatch.setAttribute('aria-label', pixelDescription(language, hex));
   rgbValue.textContent = `rgb(${r}, ${g}, ${b})`;
   hexValue.textContent = hex;
+  pickerPreview.style.backgroundColor = hex;
+  pickerHex.textContent = hex;
   syncEditor({ r, g, b, hex });
   [r, g, b].forEach((value, index) => {
     channelValues[index].textContent = value;
@@ -300,6 +317,108 @@ languageToggle.addEventListener('click', () => {
 helpOpen.addEventListener('click', () => helpDialog.showModal());
 helpClose.addEventListener('click', () => helpDialog.close());
 helpDialog.addEventListener('close', () => helpOpen.focus());
+
+function renderPickerControls() {
+  const text = getTranslations(language);
+  hueRing.setAttribute('aria-label', text.pickerHue);
+  hueRing.setAttribute('aria-valuenow', String(pickerHsv.h));
+  hueRing.setAttribute('aria-valuetext', `${Number(pickerHsv.h.toFixed(1))} ${text.degrees}`);
+  const angle = pickerHsv.h * Math.PI / 180;
+  hueRing.style.setProperty('--marker-x', `${50 + 42 * Math.sin(angle)}%`);
+  hueRing.style.setProperty('--marker-y', `${50 - 42 * Math.cos(angle)}%`);
+  [[saturationInput, pickerHsv.s, 'pickerSaturation'],
+    [brightnessInput, pickerHsv.v, 'pickerBrightness']].forEach(([input, value, key]) => {
+    input.value = value;
+    input.setAttribute('aria-label', text[key]);
+    input.setAttribute('aria-valuetext', `${Number(value.toFixed(1))} ${text.percent}`);
+    document.querySelector(`#${input.id}-value`).textContent = `${Number(value.toFixed(1))}%`;
+  });
+}
+
+function applyPickerColour() {
+  // Keep floating HSV as the interaction source; rounded RGB must not feed back into it.
+  const { r, g, b } = hsvToRgb(pickerHsv.h, pickerHsv.s, pickerHsv.v);
+  applyColourState(colourStateFromRgb(r, g, b));
+}
+
+function promoteHueColour() {
+  if (pickerHsv.s === 0) pickerHsv.s = 100;
+  if (pickerHsv.v === 0) pickerHsv.v = 100;
+}
+
+function pointerHue(event) {
+  const rect = hueRing.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  if (Math.hypot(event.clientX - centerX, event.clientY - centerY) < rect.width * .32) {
+    return null;
+  }
+  return hueFromPoint(event.clientX, event.clientY, centerX, centerY);
+}
+
+hueRing.addEventListener('pointerdown', (event) => {
+  if (!event.isPrimary || event.button !== 0 || huePointer !== null) return;
+  const hue = pointerHue(event);
+  if (hue === null) return;
+  event.preventDefault();
+  hueRing.focus();
+  huePointer = event.pointerId;
+  hueRing.setPointerCapture(huePointer);
+  promoteHueColour();
+  pickerHsv.h = hue;
+  applyPickerColour();
+});
+
+hueRing.addEventListener('pointermove', (event) => {
+  if (event.pointerId !== huePointer) return;
+  const hue = pointerHue(event);
+  if (hue === null) return;
+  pickerHsv.h = hue;
+  applyPickerColour();
+});
+
+function endHueGesture(event) {
+  if (event.pointerId !== huePointer) return;
+  if (hueRing.hasPointerCapture(huePointer)) hueRing.releasePointerCapture(huePointer);
+  huePointer = null;
+}
+
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach((type) => {
+  hueRing.addEventListener(type, endHueGesture);
+});
+
+hueRing.addEventListener('keydown', (event) => {
+  const directions = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 };
+  if (!Object.hasOwn(directions, event.key) && !['Home', 'End'].includes(event.key)) return;
+  event.preventDefault();
+  promoteHueColour();
+  if (event.key === 'Home') pickerHsv.h = 0;
+  else if (event.key === 'End') pickerHsv.h = 359;
+  else pickerHsv.h = (pickerHsv.h + directions[event.key] * (event.shiftKey ? 10 : 1) + 360) % 360;
+  applyPickerColour();
+});
+
+[[saturationInput, 's'], [brightnessInput, 'v']].forEach(([input, key]) => {
+  input.addEventListener('input', () => {
+    pickerHsv[key] = Number(input.value);
+    applyPickerColour();
+  });
+});
+
+swatch.addEventListener('click', () => {
+  const { r, g, b } = calculateColour(state.depth, state.bits);
+  pickerHsv = rgbToHsv(r, g, b);
+  renderPickerControls();
+  pickerDialog.showModal();
+});
+pickerClose.addEventListener('click', () => pickerDialog.close());
+pickerDialog.addEventListener('close', () => {
+  if (huePointer !== null && hueRing.hasPointerCapture(huePointer)) {
+    hueRing.releasePointerCapture(huePointer);
+  }
+  huePointer = null;
+  swatch.focus();
+});
 
 renderSwitches();
 renderLanguage();

@@ -44,7 +44,7 @@ body { margin: 0; }
 .header-control:hover { background: #e7efff; }
 .header-control:focus-visible { outline: 3px solid #a14900; outline-offset: 3px; }
 
-#help-dialog {
+#help-dialog, #picker-dialog {
   width: min(calc(100% - 2rem), 38rem);
   max-height: min(85dvh, 44rem);
   padding: clamp(1rem, 3vw, 2rem);
@@ -56,7 +56,7 @@ body { margin: 0; }
   overflow: auto;
 }
 
-#help-dialog::backdrop { background: #15233cbf; }
+#help-dialog::backdrop, #picker-dialog::backdrop { background: #15233cbf; }
 #help-dialog h3 { margin: 1.25rem 0 .4rem; font-size: 1rem; }
 #help-dialog p { margin: .5rem 0 1rem; }
 #help-close { margin-top: .5rem; }
@@ -164,16 +164,61 @@ h2 {
 .result { background: #f6f9fe; }
 
 .pixel-swatch {
+  display: block;
   position: relative;
   z-index: 3;
   width: clamp(128px, 19vw, 176px);
   aspect-ratio: 1;
   margin: 0 auto;
+  padding: 0;
   border: 5px solid #fff;
   border-radius: 12px;
   background: #000;
   box-shadow: 0 2px 16px #1d315637;
+  cursor: pointer;
 }
+
+.pixel-swatch:focus-visible, .hue-ring:focus-visible, .picker-range:focus-visible {
+  outline: 3px solid #a14900;
+  outline-offset: 4px;
+}
+
+#picker-dialog { width: min(calc(100% - 2rem), 30rem); }
+#picker-instructions { margin: 0 0 1.25rem; }
+.hue-ring {
+  position: relative;
+  width: min(100%, 16rem);
+  aspect-ratio: 1;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+  touch-action: none;
+  cursor: crosshair;
+}
+.hue-ring::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background: #fff;
+}
+.hue-marker {
+  position: absolute;
+  left: var(--marker-x, 50%);
+  top: var(--marker-y, 8%);
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #15233c;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.picker-control { display: flex; justify-content: space-between; gap: .5rem; font-weight: 650; }
+.picker-control output { font-variant-numeric: tabular-nums; }
+.picker-range { display: block; width: 100%; min-height: 2.75rem; margin: 0 0 .5rem; accent-color: #194baf; }
+.picker-preview { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+#picker-preview { width: 2rem; height: 2rem; border: 1px solid #829dc4; border-radius: 6px; }
 
 .colour-output {
   position: relative;

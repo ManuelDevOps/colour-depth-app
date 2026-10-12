@@ -17,6 +17,16 @@ const translations = {
     hexInput: 'Hexadecimal colour, #RRGGBB',
     rgbError: 'Enter a whole number from 0 to 255.',
     hexError: 'Enter six hexadecimal digits in #RRGGBB format.',
+    pickerOpen: 'Choose pixel colour',
+    pickerTitle: 'Choose pixel colour',
+    pickerInstructions: 'Changes apply immediately. Drag or tap the hue ring, or use arrow keys (Shift for 10°), Home (0°) and End (359°). Adjust saturation and brightness with the sliders. Close or press Escape to keep the colour and return to the pixel.',
+    pickerHue: 'Hue',
+    pickerSaturation: 'Saturation',
+    pickerBrightness: 'Brightness',
+    pickerPreview: 'Current colour',
+    pickerClose: 'Close colour selector',
+    degrees: 'degrees',
+    percent: 'percent',
     channelsTitle: 'RGB channels',
     red: 'Red',
     green: 'Green',
@@ -31,6 +41,7 @@ const translations = {
     helpButton: 'Help',
     helpTitle: 'How the explorer works',
     helpGeneral: 'Each switch represents one binary bit: 0 is off and 1 is on. Together the bits determine the red, green and blue light levels and the final pixel colour. More bits allow more possible colours. Changing depth resets all switches to 0.',
+    helpPicker: 'Activate the pixel with a click, Enter or Space to open the colour selector. Hue, saturation and brightness update the binary switches, RGB and HEX live, using the smallest exact colour depth. Opening does not change the colour. Selecting hue from black or gray restores any zero saturation or brightness so the colour is visible.',
     helpModeTitle: 'Current colour depth',
     help1: '1 bit: The single switch controls all three channels together. 0 makes a black pixel; 1 makes a white pixel. There are 2 possible colours.',
     help3: '3 bits (RGB111): One bit controls each of red, green and blue. Each channel is either 0 or 255, giving 8 possible colours.',
@@ -56,6 +67,16 @@ const translations = {
     hexInput: 'Color hexadecimal, #RRGGBB',
     rgbError: 'Introduzca un número entero entre 0 y 255.',
     hexError: 'Introduzca seis dígitos hexadecimales con el formato #RRGGBB.',
+    pickerOpen: 'Elegir el color del píxel',
+    pickerTitle: 'Elegir el color del píxel',
+    pickerInstructions: 'Los cambios se aplican de forma inmediata. Arrastre o toque el anillo de tono, o use las teclas de flecha (Mayús para 10°), Home (0°) y End (359°). Ajuste la saturación y el brillo con los deslizadores. Cierre o pulse Escape para conservar el color y volver al píxel.',
+    pickerHue: 'Tono',
+    pickerSaturation: 'Saturación',
+    pickerBrightness: 'Brillo',
+    pickerPreview: 'Color actual',
+    pickerClose: 'Cerrar el selector de color',
+    degrees: 'grados',
+    percent: 'por ciento',
     channelsTitle: 'Canales RGB',
     red: 'Rojo',
     green: 'Verde',
@@ -70,6 +91,7 @@ const translations = {
     helpButton: 'Ayuda',
     helpTitle: 'Cómo funciona el explorador',
     helpGeneral: 'Cada interruptor representa un bit binario: 0 significa apagado y 1, encendido. Los bits determinan la intensidad de las luces roja, verde y azul y el color final del píxel. Más bits permiten más colores. Al cambiar la profundidad, todos los interruptores vuelven a 0.',
+    helpPicker: 'Active el píxel con un clic, Enter o la barra espaciadora para abrir el selector de color. El tono, la saturación y el brillo actualizan los interruptores binarios, RGB y HEX de inmediato, con la menor profundidad de color exacta. Abrir el selector no cambia el color. Al elegir un tono desde negro o gris, la saturación o el brillo que estén en cero se restauran para que el color sea visible.',
     helpModeTitle: 'Profundidad de color actual',
     help1: '1 bit: El único interruptor controla los tres canales a la vez. 0 produce un píxel negro y 1, uno blanco. Hay 2 colores posibles.',
     help3: '3 bits (RGB111): Un bit controla cada canal: rojo, verde y azul. Cada canal vale 0 o 255, lo que permite 8 colores.',
@@ -104,5 +126,5 @@ export function switchDescription(locale, channel, position, width, enabled) {
 }
 
 export function pixelDescription(locale, hex) {
-  return `${getTranslations(locale).resultTitle}: ${hex}`;
+  return `${getTranslations(locale).pickerOpen}: ${hex}`;
 }

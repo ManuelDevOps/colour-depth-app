@@ -52,8 +52,33 @@ test('dynamic switch descriptions translate channel, position and state', () => 
 });
 
 test('the pixel description localizes its label without changing the hexadecimal value', () => {
-  assert.equal(pixelDescription('en', '#C86496'), 'Resulting pixel: #C86496');
-  assert.equal(pixelDescription('es', '#C86496'), 'Píxel resultante: #C86496');
+  assert.equal(pixelDescription('en', '#C86496'), 'Choose pixel colour: #C86496');
+  assert.equal(pixelDescription('es', '#C86496'), 'Elegir el color del píxel: #C86496');
+});
+
+test('picker controls and live keyboard guidance are localized in both languages', () => {
+  for (const locale of ['en', 'es']) {
+    const text = getTranslations(locale);
+    for (const key of ['pickerOpen', 'pickerTitle', 'pickerInstructions', 'pickerHue',
+      'pickerSaturation', 'pickerBrightness', 'pickerPreview', 'pickerClose',
+      'degrees', 'percent', 'helpPicker']) {
+      assert.ok(text[key]?.trim(), `${locale}: ${key}`);
+    }
+    assert.match(text.pickerInstructions, /Home.*End/);
+    assert.match(text.pickerInstructions, /Escape/);
+    assert.match(text.helpPicker, /RGB.*HEX/);
+    assert.match(text.helpPicker, /exact/i);
+  }
+  const en = getTranslations('en');
+  const es = getTranslations('es');
+  assert.match(en.pickerInstructions, /live|immediate/i);
+  assert.match(en.pickerInstructions, /arrow/i);
+  assert.match(es.pickerInstructions, /inmediata/i);
+  assert.match(es.pickerInstructions, /flecha/i);
+  assert.equal(en.pickerBrightness, 'Brightness');
+  assert.equal(es.pickerBrightness, 'Brillo');
+  assert.match(en.pickerClose, /close/i);
+  assert.match(es.pickerClose, /cerrar/i);
 });
 
 test('unsupported locales cannot silently show mismatched language content', () => {

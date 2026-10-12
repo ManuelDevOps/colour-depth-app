@@ -17,6 +17,8 @@ Choose a colour depth, then activate switches with a pointer or the keyboard (Ta
 
 To set a colour directly, edit one RGB channel (0–255) or type the six digits of a HEX colour in the HEX field, which already shows the `#` symbol (for example `920000`); values typed or pasted without the `#` are normalized to include it. Press Enter or leave the field to apply it. The explorer selects the smallest depth that reproduces the colour exactly and updates the switches; incomplete or invalid values leave the current pixel unchanged and show an error. Press Escape while editing to restore the current value. Selecting a depth manually still resets its switches.
 
+Click the pixel (or focus it and press Enter or Space) to open the circular colour selector. Drag or tap the hue ring; arrow keys adjust hue by 1°, Shift+arrow by 10°, Home selects 0° and End selects 359°. Use the native saturation and brightness sliders for lighter, darker or less saturated colours. Changes update every representation live and select the smallest exact depth. Opening leaves the colour unchanged; choosing hue from black or gray restores zero saturation/brightness so the colour becomes visible. **Close colour selector** or Escape keeps the live colour and returns focus to the pixel.
+
 ## Check the app
 
 Run `npm test` for the colour model, wiring and translations. For syntax checks, run `node --check src/app.js`, `node --check src/translations.js` and `node --check scripts/dev-server.js`. In a browser, check switch output at each depth, keyboard focus, language changes with bits on, help in both languages, and layout at narrow widths or zoom. No external dependencies are required.

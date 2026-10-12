@@ -8,6 +8,7 @@ const files = new Map([
   ['/index.html', ['index.html', 'text/html; charset=utf-8']],
   ['/src/app.js', ['src/app.js', 'text/javascript; charset=utf-8']],
   ['/src/colour-model.js', ['src/colour-model.js', 'text/javascript; charset=utf-8']],
+  ['/src/colour-picker-model.js', ['src/colour-picker-model.js', 'text/javascript; charset=utf-8']],
   ['/src/wiring.js', ['src/wiring.js', 'text/javascript; charset=utf-8']],
   ['/src/translations.js', ['src/translations.js', 'text/javascript; charset=utf-8']],
   ['/src/styles.css', ['src/styles.css', 'text/css; charset=utf-8']],
