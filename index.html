@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#edf3fb">
+    <title>Binary Pixel Colour Explorer</title>
+    <link rel="stylesheet" href="./src/styles.css">
+    <script type="module" src="./src/app.js"></script>
+  </head>
+  <body>
+    <main class="explorer">
+      <header class="page-header">
+        <h1>Binary Pixel Colour Explorer</h1>
+      </header>
+
+      <fieldset class="depth-selector">
+        <legend>Colour depth (bits per pixel)</legend>
+        <div class="depth-options">
+          <label class="depth-option"><input type="radio" name="depth" value="1"><span>1 bit</span></label>
+          <label class="depth-option"><input type="radio" name="depth" value="3" checked><span>3 bits</span></label>
+          <label class="depth-option"><input type="radio" name="depth" value="8"><span>8 bits</span></label>
+          <label class="depth-option"><input type="radio" name="depth" value="24"><span>24 bits</span></label>
+        </div>
+      </fieldset>
+
+      <section class="result" aria-labelledby="result-title">
+        <h2 id="result-title">Resulting pixel</h2>
+        <div id="pixel-swatch" class="pixel-swatch" role="img" aria-label="Resulting pixel: #000000"></div>
+        <p id="colour-output" class="colour-output" role="status" aria-live="polite" aria-atomic="true">
+          <span>RGB: <strong id="rgb-value">rgb(0, 0, 0)</strong></span>
+          <span>Hex: <strong id="hex-value">#000000</strong></span>
+        </p>
+      </section>
+
+      <section class="channels" aria-labelledby="channels-title">
+        <h2 id="channels-title">RGB channels</h2>
+        <div class="channel-values">
+          <p class="channel channel-red"><span>Red (R)</span><strong data-channel-value="r">0</strong></p>
+          <p class="channel channel-green"><span>Green (G)</span><strong data-channel-value="g">0</strong></p>
+          <p class="channel channel-blue"><span>Blue (B)</span><strong data-channel-value="b">0</strong></p>
+        </div>
+      </section>
+
+      <section class="bits-panel" aria-labelledby="bits-title">
+        <h2 id="bits-title">Binary switches</h2>
+        <div id="switch-groups" class="switch-groups"></div>
+      </section>
+    </main>
+  </body>
+</html>
