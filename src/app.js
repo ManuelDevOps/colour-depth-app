@@ -17,8 +17,9 @@ const switchGroups = document.querySelector('#switch-groups');
 const swatch = document.querySelector('#pixel-swatch');
 const rgbValue = document.querySelector('#rgb-value');
 const hexValue = document.querySelector('#hex-value');
+const hexInput = document.querySelector('#edit-hex');
 const editorInputs = [...channelKeys.map((key) => document.querySelector(`#edit-${key}`)),
-  document.querySelector('#edit-hex')];
+  hexInput];
 const editorError = document.querySelector('#edit-error');
 const channelValues = channelKeys.map((key) =>
   document.querySelector(`[data-channel-value="${key}"]`)
@@ -106,6 +107,10 @@ function commitEditor(input) {
 editorInputs.forEach((input) => {
   input.addEventListener('input', () => {
     input.dataset.dirty = 'true';
+    if (input === hexInput && input.value !== '' && !input.value.startsWith('#')) {
+      input.value = `#${input.value}`.slice(0, 7);
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
     if (errorInput === input) showEditorError(null);
   });
   input.addEventListener('change', () => commitEditor(input));
@@ -123,6 +128,15 @@ editorInputs.forEach((input) => {
       syncEditor(calculateColour(state.depth, state.bits));
     }
   });
+});
+
+hexInput.addEventListener('focus', () => {
+  if (hexInput.value === '') hexInput.value = '#';
+  if (/^#[0-9a-fA-F]{6}$/.test(hexInput.value)) {
+    hexInput.setSelectionRange(1, 7);
+  } else {
+    hexInput.setSelectionRange(hexInput.value.length, hexInput.value.length);
+  }
 });
 
 function renderLanguage() {

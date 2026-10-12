@@ -15,7 +15,7 @@ If Windows PowerShell blocks `npm.ps1`, use `npm.cmd start` (and `npm.cmd test`)
 
 Choose a colour depth, then activate switches with a pointer or the keyboard (Tab to focus, Space or Enter to toggle). The output, bulbs and pixel update immediately. Changing depth resets all bits to 0. Use **ES/EN** to switch languages without losing the active bits; the choice remains for the current browser tab session, but a fresh session starts in English. Open **?** for guidance specific to the chosen depth; Escape or **Close help** dismisses it.
 
-To set a colour directly, edit one RGB channel (0–255) or enter a six-digit HEX value such as `#920000`. Press Enter or leave the field to apply it. The explorer selects the smallest depth that reproduces the colour exactly and updates the switches; incomplete or invalid values leave the current pixel unchanged and show an error. Press Escape while editing to restore the current value. Selecting a depth manually still resets its switches.
+To set a colour directly, edit one RGB channel (0–255) or type the six digits of a HEX colour in the HEX field, which already shows the `#` symbol (for example `920000`); values typed or pasted without the `#` are normalized to include it. Press Enter or leave the field to apply it. The explorer selects the smallest depth that reproduces the colour exactly and updates the switches; incomplete or invalid values leave the current pixel unchanged and show an error. Press Escape while editing to restore the current value. Selecting a depth manually still resets its switches.
 
 ## Check the app
 
