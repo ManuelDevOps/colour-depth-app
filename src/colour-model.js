@@ -35,6 +35,17 @@ function toHex(channel) {
   return channel.toString(16).padStart(2, '0').toUpperCase();
 }
 
+function channelBits(value, width) {
+  const maximum = 2 ** width - 1;
+  for (let encoded = 0; encoded <= maximum; encoded += 1) {
+    const decoded = width === 8 ? encoded : Math.round(encoded * 255 / maximum);
+    if (decoded === value) {
+      return [...encoded.toString(2).padStart(width, '0')].map(Number);
+    }
+  }
+  return null;
+}
+
 /** Create { depth, bits } with all bits off; depth must be 1, 3, 8 or 24. */
 export function createColourState(depth) {
   assertDepth(depth);
@@ -74,4 +85,46 @@ export function calculateColour(depth, bits) {
   }
 
   return { r, g, b, hex: `#${toHex(r)}${toHex(g)}${toHex(b)}` };
+}
+
+/** Return the smallest exact { depth, bits } for integer RGB channels from 0 to 255. */
+export function colourStateFromRgb(r, g, b) {
+  if (![r, g, b].every((value) => Number.isInteger(value) && value >= 0 && value <= 255)) {
+    throw new RangeError('RGB channels must be integers from 0 to 255.');
+  }
+
+  for (const depth of SUPPORTED_DEPTHS) {
+    let bits;
+    if (depth === 1) {
+      bits = r === g && g === b && (r === 0 || r === 255) ? [r === 255 ? 1 : 0] : null;
+    } else {
+      const channels = [r, g, b].map((value, index) => channelBits(value, CHANNEL_WIDTHS[depth][index]));
+      bits = channels.every((channel) => channel !== null) ? channels.flat() : null;
+    }
+
+    if (bits) {
+      const result = calculateColour(depth, bits);
+      if (result.r === r && result.g === g && result.b === b) {
+        return { depth, bits };
+      }
+    }
+  }
+}
+
+/** Parse a six-digit #RRGGBB string into numeric RGB channels. */
+export function parseHexColour(hex) {
+  if (typeof hex !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(hex)) {
+    throw new TypeError('HEX colour must be six digits prefixed with #.');
+  }
+  return {
+    r: Number.parseInt(hex.slice(1, 3), 16),
+    g: Number.parseInt(hex.slice(3, 5), 16),
+    b: Number.parseInt(hex.slice(5, 7), 16),
+  };
+}
+
+/** Parse #RRGGBB and return its smallest exact { depth, bits }. */
+export function colourStateFromHex(hex) {
+  const { r, g, b } = parseHexColour(hex);
+  return colourStateFromRgb(r, g, b);
 }

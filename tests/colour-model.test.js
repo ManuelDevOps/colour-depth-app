@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import {
   calculateColour,
   changeColourDepth,
+  colourStateFromHex,
+  colourStateFromRgb,
   createColourState,
+  parseHexColour,
 } from '../src/colour-model.js';
 
 const bits = (binary) => [...binary.replaceAll(' ', '')].map(Number);
@@ -146,5 +149,72 @@ test('depth transitions reject malformed existing state', () => {
     { depth: 3, bits: [1] }, { depth: 3, bits: [1, 2, 0] },
   ]) {
     assert.throws(() => changeColourDepth(invalid, 8), TypeError);
+  }
+});
+
+test('RGB inversion chooses one bit for black and white before any other depth', () => {
+  assert.deepEqual(colourStateFromRgb(0, 0, 0), { depth: 1, bits: [0] });
+  assert.deepEqual(colourStateFromRgb(255, 255, 255), { depth: 1, bits: [1] });
+});
+
+test('every RGB111 combination inverts to the shallowest exact bit pattern', () => {
+  for (let value = 0; value < 8; value += 1) {
+    const input = bits(value.toString(2).padStart(3, '0'));
+    const { r, g, b } = calculateColour(3, input);
+    const expected = value === 0 || value === 7
+      ? { depth: 1, bits: [value === 7 ? 1 : 0] }
+      : { depth: 3, bits: input };
+    assert.deepEqual(colourStateFromRgb(r, g, b), expected, `RGB111 ${value}`);
+  }
+});
+
+test('every RGB332 combination inverts exactly, preferring one or three bits when possible', () => {
+  for (let value = 0; value < 256; value += 1) {
+    const input = bits(value.toString(2).padStart(8, '0'));
+    const colour = calculateColour(8, input);
+    const state = colourStateFromRgb(colour.r, colour.g, colour.b);
+    const expectedDepth = value === 0 || value === 255 ? 1
+      : [0, 3, 28, 31, 224, 227, 252, 255].includes(value) ? 3 : 8;
+    assert.equal(state.depth, expectedDepth, `RGB332 ${value}`);
+    assert.deepEqual(calculateColour(state.depth, state.bits), colour, `RGB332 ${value}`);
+    assert.deepEqual(colourStateFromHex(colour.hex), state, `RGB332 HEX ${value}`);
+    if (expectedDepth === 8) assert.deepEqual(state.bits, input, `RGB332 ${value}`);
+  }
+});
+
+test('non-representable lower-depth channels require exact RGB888 bits', () => {
+  for (const [r, g, b] of [[1, 2, 3], [200, 100, 150], [128, 64, 1], [35, 73, 85], [0, 0, 84]]) {
+    const state = colourStateFromRgb(r, g, b);
+    assert.equal(state.depth, 24);
+    assert.deepEqual(state.bits, bits([r, g, b].map((channel) => channel.toString(2).padStart(8, '0')).join('')));
+    const colour = calculateColour(state.depth, state.bits);
+    assert.deepEqual([colour.r, colour.g, colour.b], [r, g, b]);
+    assert.deepEqual(colourStateFromHex(colour.hex), state);
+  }
+});
+
+test('HEX parser accepts exactly six digits and HEX inversion follows RGB precedence', () => {
+  assert.deepEqual(parseHexColour('#aBcD09'), { r: 171, g: 205, b: 9 });
+  assert.deepEqual(colourStateFromHex('#ffffff'), { depth: 1, bits: [1] });
+  assert.deepEqual(colourStateFromHex('#FF00ff'), { depth: 3, bits: [1, 0, 1] });
+  assert.deepEqual(colourStateFromHex('#244955'), { depth: 8, bits: bits('001 010 01') });
+  assert.deepEqual(colourStateFromHex('#C86496'), colourStateFromRgb(200, 100, 150));
+});
+
+test('RGB inversion rejects missing, non-integer, out-of-range or coerced channels', () => {
+  for (const invalid of [-1, 256, 0.5, NaN, Infinity, -Infinity, '0', null, undefined, true, 1n, {}, []]) {
+    for (let channel = 0; channel < 3; channel += 1) {
+      const input = [0, 0, 0];
+      input[channel] = invalid;
+      assert.throws(() => colourStateFromRgb(...input), RangeError, `${String(invalid)} in channel ${channel}`);
+    }
+  }
+});
+
+test('HEX parser and inversion reject incomplete, unprefixed and malformed values', () => {
+  for (const invalid of ['', '#', '#FFF', '#FFFFFFF', 'FFFFFF', '#00GG00', '#FF FF00',
+    '#１２３４５６', '#abcdef\n', null, undefined, 123456, {}, ['#FFFFFF']]) {
+    assert.throws(() => parseHexColour(invalid), TypeError);
+    assert.throws(() => colourStateFromHex(invalid), TypeError);
   }
 });
