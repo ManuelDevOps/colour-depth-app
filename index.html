@@ -24,28 +24,31 @@
         </div>
       </fieldset>
 
-      <section class="result" aria-labelledby="result-title">
-        <h2 id="result-title">Resulting pixel</h2>
-        <div id="pixel-swatch" class="pixel-swatch" role="img" aria-label="Resulting pixel: #000000"></div>
-        <p id="colour-output" class="colour-output" role="status" aria-live="polite" aria-atomic="true">
-          <span>RGB: <strong id="rgb-value">rgb(0, 0, 0)</strong></span>
-          <span>Hex: <strong id="hex-value">#000000</strong></span>
-        </p>
-      </section>
+      <div class="diagram" id="diagram">
+        <svg id="wiring" class="wiring" aria-hidden="true" focusable="false"></svg>
+        <section class="result" aria-labelledby="result-title">
+          <h2 id="result-title">Resulting pixel</h2>
+          <div id="pixel-swatch" class="pixel-swatch" role="img" aria-label="Resulting pixel: #000000"></div>
+          <p id="colour-output" class="colour-output" role="status" aria-live="polite" aria-atomic="true">
+            <span>RGB: <strong id="rgb-value">rgb(0, 0, 0)</strong></span>
+            <span>Hex: <strong id="hex-value">#000000</strong></span>
+          </p>
+        </section>
 
-      <section class="channels" aria-labelledby="channels-title">
-        <h2 id="channels-title">RGB channels</h2>
-        <div class="channel-values">
-          <p class="channel channel-red"><span>Red (R)</span><strong data-channel-value="r">0</strong></p>
-          <p class="channel channel-green"><span>Green (G)</span><strong data-channel-value="g">0</strong></p>
-          <p class="channel channel-blue"><span>Blue (B)</span><strong data-channel-value="b">0</strong></p>
-        </div>
-      </section>
+        <section class="channels" aria-labelledby="channels-title">
+          <h2 id="channels-title">RGB channels</h2>
+          <div class="channel-values">
+            <p class="channel channel-red"><span>Red (R)</span><span class="bulb" data-bulb="r" aria-hidden="true"></span><strong data-channel-value="r">0</strong></p>
+            <p class="channel channel-green"><span>Green (G)</span><span class="bulb" data-bulb="g" aria-hidden="true"></span><strong data-channel-value="g">0</strong></p>
+            <p class="channel channel-blue"><span>Blue (B)</span><span class="bulb" data-bulb="b" aria-hidden="true"></span><strong data-channel-value="b">0</strong></p>
+          </div>
+        </section>
 
-      <section class="bits-panel" aria-labelledby="bits-title">
-        <h2 id="bits-title">Binary switches</h2>
-        <div id="switch-groups" class="switch-groups"></div>
-      </section>
+        <section class="bits-panel" aria-labelledby="bits-title">
+          <h2 id="bits-title">Binary switches</h2>
+          <div id="switch-groups" class="switch-groups"></div>
+        </section>
+      </div>
     </main>
   </body>
 </html>

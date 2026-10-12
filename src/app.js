@@ -1,7 +1,9 @@
 import { calculateColour, changeColourDepth, createColourState } from './colour-model.js';
+import { renderWiring } from './wiring.js';
 
 const channelNames = ['Red', 'Green', 'Blue'];
 const channelKeys = ['r', 'g', 'b'];
+const glowColours = ['230, 35, 55', '25, 180, 80', '40, 95, 240'];
 const widthsByDepth = {
   1: [1],
   3: [1, 1, 1],
@@ -17,6 +19,19 @@ const hexValue = document.querySelector('#hex-value');
 const channelValues = channelKeys.map((key) =>
   document.querySelector(`[data-channel-value="${key}"]`)
 );
+const bulbElements = channelKeys.map((key) => document.querySelector(`[data-bulb="${key}"]`));
+const diagram = document.querySelector('#diagram');
+const wiring = document.querySelector('#wiring');
+
+let wiringFrame = 0;
+
+function scheduleWiring() {
+  if (wiringFrame) return;
+  wiringFrame = requestAnimationFrame(() => {
+    wiringFrame = 0;
+    renderWiring(wiring, diagram, switchGroups, bulbElements, swatch);
+  });
+}
 
 let state = createColourState(Number(document.querySelector('input[name="depth"]:checked').value));
 
@@ -28,6 +43,13 @@ function renderResult() {
   hexValue.textContent = hex;
   [r, g, b].forEach((value, index) => {
     channelValues[index].textContent = value;
+    const intensity = value / 255;
+    const light = [42, 42, 42];
+    light[index] = Math.round(42 + intensity * 213);
+    bulbElements[index].style.setProperty('--bulb-colour', `rgb(${light.join(' ')})`);
+    bulbElements[index].style.setProperty('--bulb-glow',
+      `rgba(${glowColours[index]}, ${(.7 * intensity).toFixed(3)})`);
+    bulbElements[index].style.setProperty('--glow-size', `${Math.round(5 + 22 * intensity)}px`);
   });
 }
 
@@ -71,6 +93,7 @@ function renderSwitches() {
     const group = document.createElement('fieldset');
     group.className = 'bit-group';
     group.dataset.width = width;
+    group.dataset.channel = state.depth === 1 ? 'all' : channelKeys[channelIndex];
     const legend = document.createElement('legend');
     legend.textContent = name;
 
@@ -87,6 +110,7 @@ function renderSwitches() {
   });
 
   switchGroups.replaceChildren(...groups);
+  scheduleWiring();
 }
 
 switchGroups.addEventListener('click', (event) => {
@@ -114,3 +138,8 @@ depthInputs.forEach((input) => {
 
 renderSwitches();
 renderResult();
+
+const resizeObserver = new ResizeObserver(scheduleWiring);
+[diagram, swatch, switchGroups, ...bulbElements].forEach((element) => resizeObserver.observe(element));
+window.addEventListener('resize', scheduleWiring);
+document.fonts.ready.then(scheduleWiring);
