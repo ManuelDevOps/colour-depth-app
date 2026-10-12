@@ -1,4 +1,4 @@
-import { calculateColour, changeColourDepth, createColourState } from './colour-model.js';
+import { calculateColour, changeColourDepth, colourStateFromHex, colourStateFromRgb, createColourState } from './colour-model.js';
 import { renderWiring } from './wiring.js';
 import { getTranslations, pixelDescription, switchDescription, switchStateLabel } from './translations.js';
 
@@ -17,6 +17,9 @@ const switchGroups = document.querySelector('#switch-groups');
 const swatch = document.querySelector('#pixel-swatch');
 const rgbValue = document.querySelector('#rgb-value');
 const hexValue = document.querySelector('#hex-value');
+const editorInputs = [...channelKeys.map((key) => document.querySelector(`#edit-${key}`)),
+  document.querySelector('#edit-hex')];
+const editorError = document.querySelector('#edit-error');
 const channelValues = channelKeys.map((key) =>
   document.querySelector(`[data-channel-value="${key}"]`)
 );
@@ -47,6 +50,80 @@ function scheduleWiring() {
 }
 
 let state = createColourState(Number(document.querySelector('input[name="depth"]:checked').value));
+let errorInput = null;
+
+function showEditorError(input) {
+  if (errorInput && errorInput !== input) {
+    errorInput.removeAttribute('aria-invalid');
+    errorInput.removeAttribute('aria-describedby');
+  }
+  errorInput = input;
+  if (input) {
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', 'edit-hint edit-error');
+  }
+  editorError.textContent = input
+    ? getTranslations(language)[input.id === 'edit-hex' ? 'hexError' : 'rgbError'] : '';
+}
+
+function syncEditor(colour) {
+  [...[colour.r, colour.g, colour.b], colour.hex].forEach((value, index) => {
+    if (editorInputs[index].dataset.dirty !== 'true') editorInputs[index].value = value;
+  });
+}
+
+function clearEditorDrafts() {
+  editorInputs.forEach((input) => { input.dataset.dirty = 'false'; });
+  showEditorError(null);
+}
+
+function commitEditor(input) {
+  try {
+    let next;
+    if (input.id === 'edit-hex') {
+      next = colourStateFromHex(input.value);
+    } else {
+      const raw = input.value;
+      if (input.validity.badInput || !/^\d+$/.test(raw) || Number(raw) > 255) {
+        throw new RangeError('Invalid RGB channel.');
+      }
+      const colour = calculateColour(state.depth, state.bits);
+      colour[input.id.slice(-1)] = Number(raw);
+      next = colourStateFromRgb(colour.r, colour.g, colour.b);
+    }
+    state = next;
+    clearEditorDrafts();
+    depthInputs.forEach((radio) => { radio.checked = Number(radio.value) === state.depth; });
+    renderSwitches();
+    renderLanguage();
+  } catch (error) {
+    if (!(error instanceof TypeError || error instanceof RangeError)) throw error;
+    input.dataset.dirty = 'true';
+    showEditorError(input);
+  }
+}
+
+editorInputs.forEach((input) => {
+  input.addEventListener('input', () => {
+    input.dataset.dirty = 'true';
+    if (errorInput === input) showEditorError(null);
+  });
+  input.addEventListener('change', () => commitEditor(input));
+  input.addEventListener('blur', () => {
+    if (input.dataset.dirty === 'true' && errorInput !== input) commitEditor(input);
+  });
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      commitEditor(input);
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      input.dataset.dirty = 'false';
+      if (errorInput === input) showEditorError(null);
+      syncEditor(calculateColour(state.depth, state.bits));
+    }
+  });
+});
 
 function renderLanguage() {
   const text = getTranslations(language);
@@ -59,6 +136,10 @@ function renderLanguage() {
   languageToggle.setAttribute('aria-label', text.languageAction);
   helpOpen.setAttribute('aria-label', text.helpButton);
   helpMode.textContent = text[`help${state.depth}`];
+  editorInputs.forEach((input, index) => {
+    input.setAttribute('aria-label', text[['redInput', 'greenInput', 'blueInput', 'hexInput'][index]]);
+  });
+  if (errorInput) showEditorError(errorInput);
 
   switchGroups.querySelectorAll('.bit-group').forEach((group) => {
     const channel = group.dataset.channel === 'all'
@@ -67,6 +148,7 @@ function renderLanguage() {
     group.querySelector('legend').textContent = text[channel];
     group.querySelectorAll('.bit-switch').forEach((button, index) => {
       const enabled = state.bits[Number(button.dataset.bitIndex)] === 1;
+      button.setAttribute('aria-checked', String(enabled));
       button.setAttribute('aria-label', switchDescription(language, channel, index + 1,
         Number(group.dataset.width), enabled));
       button.querySelector('.bit-state').textContent = switchStateLabel(language, enabled);
@@ -83,6 +165,7 @@ function renderResult() {
   swatch.setAttribute('aria-label', pixelDescription(language, hex));
   rgbValue.textContent = `rgb(${r}, ${g}, ${b})`;
   hexValue.textContent = hex;
+  syncEditor({ r, g, b, hex });
   [r, g, b].forEach((value, index) => {
     channelValues[index].textContent = value;
     const intensity = value / 255;
@@ -165,6 +248,7 @@ switchGroups.addEventListener('click', (event) => {
   const bits = [...state.bits];
   bits[index] = bits[index] === 0 ? 1 : 0;
   state = { ...state, bits };
+  clearEditorDrafts();
 
   button.setAttribute('aria-checked', String(bits[index] === 1));
   const group = button.closest('.bit-group');
@@ -183,6 +267,7 @@ depthInputs.forEach((input) => {
   input.addEventListener('change', () => {
     if (!input.checked) return;
     state = changeColourDepth(state, Number(input.value));
+    clearEditorDrafts();
     renderSwitches();
     renderLanguage();
   });

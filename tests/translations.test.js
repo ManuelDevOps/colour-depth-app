@@ -17,6 +17,21 @@ test('English and Spanish provide every interface and help key', () => {
   assert.match(es.helpGeneral, /0.*1/s);
 });
 
+test('editor guidance and reachable validation errors are available in both languages', () => {
+  for (const locale of ['en', 'es']) {
+    const text = getTranslations(locale);
+    for (const key of ['editHint', 'redInput', 'greenInput', 'blueInput', 'hexInput',
+      'rgbError', 'hexError']) {
+      assert.ok(text[key]?.trim(), `${locale}: ${key}`);
+    }
+    assert.match(text.rgbError, /0.*255/);
+    assert.match(text.hexError, /#RRGGBB/);
+    assert.match(text.editHint, /Enter/);
+  }
+  assert.match(getTranslations('es').rgbError, /entero/);
+  assert.match(getTranslations('en').hexError, /six/i);
+});
+
 test('help is specific to each depth and historical 8-bit alternatives are not erased', () => {
   for (const locale of ['en', 'es']) {
     const text = getTranslations(locale);
