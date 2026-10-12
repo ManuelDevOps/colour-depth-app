@@ -1,6 +1,6 @@
 import { calculateColour, changeColourDepth, createColourState } from './colour-model.js';
 import { renderWiring } from './wiring.js';
-import { getTranslations, pixelDescription, switchDescription } from './translations.js';
+import { getTranslations, pixelDescription, switchDescription, switchStateLabel } from './translations.js';
 
 const channelNames = ['red', 'green', 'blue'];
 const channelKeys = ['r', 'g', 'b'];
@@ -69,7 +69,8 @@ function renderLanguage() {
       const enabled = state.bits[Number(button.dataset.bitIndex)] === 1;
       button.setAttribute('aria-label', switchDescription(language, channel, index + 1,
         Number(group.dataset.width), enabled));
-      button.querySelector('.bit-index').textContent = `${text.bit} ${index + 1}`;
+      button.querySelector('.bit-state').textContent = switchStateLabel(language, enabled);
+      button.querySelector('.bit-digit').textContent = enabled ? '1' : '0';
     });
   });
   renderResult();
@@ -85,9 +86,12 @@ function renderResult() {
   [r, g, b].forEach((value, index) => {
     channelValues[index].textContent = value;
     const intensity = value / 255;
-    const light = [42, 42, 42];
-    light[index] = Math.round(42 + intensity * 213);
-    bulbElements[index].style.setProperty('--bulb-colour', `rgb(${light.join(' ')})`);
+    const light = [0, 0, 0];
+    light[index] = 255;
+    bulbElements[index].style.setProperty('--bulb-colour',
+      `rgba(${light.join(', ')}, ${(.75 * intensity).toFixed(3)})`);
+    bulbElements[index].style.setProperty('--bulb-shine',
+      `rgba(255, 255, 255, ${(.6 * intensity).toFixed(3)})`);
     bulbElements[index].style.setProperty('--bulb-glow',
       `rgba(${glowColours[index]}, ${(.7 * intensity).toFixed(3)})`);
     bulbElements[index].style.setProperty('--glow-size', `${Math.round(5 + 22 * intensity)}px`);
@@ -103,11 +107,6 @@ function createSwitch(index, position, width, channelName) {
   button.setAttribute('aria-checked', 'false');
   button.setAttribute('aria-label', switchDescription(language, channelName, position, width, false));
 
-  const bitIndex = document.createElement('span');
-  bitIndex.className = 'bit-index';
-  bitIndex.setAttribute('aria-hidden', 'true');
-  bitIndex.textContent = `${getTranslations(language).bit} ${position}`;
-
   const track = document.createElement('span');
   track.className = 'switch-track';
   track.setAttribute('aria-hidden', 'true');
@@ -115,11 +114,15 @@ function createSwitch(index, position, width, channelName) {
   lever.className = 'switch-lever';
   track.append(lever);
 
+  const label = document.createElement('span');
+  label.className = 'bit-state';
+  label.setAttribute('aria-hidden', 'true');
+  label.textContent = switchStateLabel(language, false);
   const digit = document.createElement('span');
   digit.className = 'bit-digit';
   digit.setAttribute('aria-hidden', 'true');
   digit.textContent = '0';
-  button.append(bitIndex, track, digit);
+  button.append(label, track, digit);
   return button;
 }
 
@@ -171,6 +174,7 @@ switchGroups.addEventListener('click', (event) => {
   const position = [...group.querySelectorAll('.bit-switch')].indexOf(button) + 1;
   button.setAttribute('aria-label', switchDescription(language, channel, position,
     Number(group.dataset.width), bits[index] === 1));
+  button.querySelector('.bit-state').textContent = switchStateLabel(language, bits[index] === 1);
   button.querySelector('.bit-digit').textContent = String(bits[index]);
   renderResult();
 });

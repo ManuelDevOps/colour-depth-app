@@ -70,6 +70,12 @@ export function getTranslations(locale) {
   return translations[locale];
 }
 
+/** Visible labels share the accessible state vocabulary, with switch-face casing. */
+export function switchStateLabel(locale, enabled) {
+  const text = getTranslations(locale);
+  return (enabled ? text.on : text.off).toUpperCase();
+}
+
 export function switchDescription(locale, channel, position, width, enabled) {
   const text = getTranslations(locale);
   if (!['red', 'green', 'blue', 'monochrome'].includes(channel)) {
