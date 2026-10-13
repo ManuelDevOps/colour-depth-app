@@ -16,8 +16,6 @@ const widthsByDepth = {
 const depthInputs = document.querySelectorAll('input[name="depth"]');
 const switchGroups = document.querySelector('#switch-groups');
 const swatch = document.querySelector('#pixel-swatch');
-const rgbValue = document.querySelector('#rgb-value');
-const hexValue = document.querySelector('#hex-value');
 const hexInput = document.querySelector('#edit-hex');
 const editorInputs = [...channelKeys.map((key) => document.querySelector(`#edit-${key}`)),
   hexInput];
@@ -192,8 +190,6 @@ function renderResult() {
   const { r, g, b, hex } = calculateColour(state.depth, state.bits);
   swatch.style.backgroundColor = hex;
   swatch.setAttribute('aria-label', pixelDescription(language, hex));
-  rgbValue.textContent = `rgb(${r}, ${g}, ${b})`;
-  hexValue.textContent = hex;
   pickerPreview.style.backgroundColor = hex;
   pickerHex.textContent = hex;
   syncEditor({ r, g, b, hex });
