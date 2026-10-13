@@ -62,17 +62,21 @@
         </section>
       </div>
       <dialog id="picker-dialog" aria-labelledby="picker-title" aria-describedby="picker-instructions">
-        <h2 id="picker-title" data-i18n="pickerTitle">Choose pixel colour</h2>
-        <p id="picker-instructions" data-i18n="pickerInstructions"></p>
-        <div id="picker-hue" class="hue-ring" role="slider" tabindex="0" autofocus aria-label="Hue" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" aria-describedby="picker-instructions">
-          <span class="hue-marker" aria-hidden="true"></span>
+        <div class="picker-body">
+          <h2 id="picker-title" data-i18n="pickerTitle">Choose pixel colour</h2>
+          <p id="picker-instructions" data-i18n="pickerInstructions"></p>
+          <div id="picker-hue" class="hue-ring" role="slider" tabindex="0" autofocus aria-label="Hue" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" aria-describedby="picker-instructions">
+            <span class="hue-marker" aria-hidden="true"></span>
+          </div>
+          <label class="picker-control" for="picker-saturation"><span data-i18n="pickerSaturation">Saturation</span><output id="picker-saturation-value" for="picker-saturation"></output></label>
+          <input id="picker-saturation" class="picker-range" type="range" min="0" max="100" step="any" value="0">
+          <label class="picker-control" for="picker-brightness"><span data-i18n="pickerBrightness">Brightness</span><output id="picker-brightness-value" for="picker-brightness"></output></label>
+          <input id="picker-brightness" class="picker-range" type="range" min="0" max="100" step="any" value="0">
+          <p class="picker-preview"><span id="picker-preview" aria-hidden="true"></span><span data-i18n="pickerPreview">Current colour</span>: <strong id="picker-hex">#000000</strong></p>
         </div>
-        <label class="picker-control" for="picker-saturation"><span data-i18n="pickerSaturation">Saturation</span><output id="picker-saturation-value" for="picker-saturation"></output></label>
-        <input id="picker-saturation" class="picker-range" type="range" min="0" max="100" step="any" value="0">
-        <label class="picker-control" for="picker-brightness"><span data-i18n="pickerBrightness">Brightness</span><output id="picker-brightness-value" for="picker-brightness"></output></label>
-        <input id="picker-brightness" class="picker-range" type="range" min="0" max="100" step="any" value="0">
-        <p class="picker-preview"><span id="picker-preview" aria-hidden="true"></span><span data-i18n="pickerPreview">Current colour</span>: <strong id="picker-hex">#000000</strong></p>
-        <button id="picker-close" class="header-control" type="button" data-i18n="pickerClose">Close colour selector</button>
+        <div class="picker-footer">
+          <button id="picker-close" class="header-control" type="button" data-i18n="pickerClose">Close colour selector</button>
+        </div>
       </dialog>
       <dialog id="help-dialog" aria-labelledby="help-title" aria-describedby="help-general">
         <h2 id="help-title" data-i18n="helpTitle">How the explorer works</h2>

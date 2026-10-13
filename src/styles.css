@@ -184,7 +184,25 @@ h2 {
   outline-offset: 4px;
 }
 
-#picker-dialog { width: min(calc(100% - 2rem), 30rem); }
+#picker-dialog {
+  width: min(calc(100% - 2rem), 30rem);
+  max-height: 85vh;
+  max-height: 85svh;
+  max-height: 85dvh;
+  padding: 0;
+  overflow: hidden;
+}
+#picker-dialog[open] { display: flex; flex-direction: column; }
+.picker-body {
+  min-height: 0;
+  padding: clamp(1rem, 3vw, 2rem);
+  overflow-y: auto;
+}
+.picker-footer {
+  flex: none;
+  padding: .75rem clamp(1rem, 3vw, 2rem);
+  border-top: 1px solid #dbe5f2;
+}
 #picker-instructions { margin: 0 0 1.25rem; }
 .hue-ring {
   position: relative;
