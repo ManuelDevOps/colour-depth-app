@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    title: 'Pixel Colour',
+    title: 'Pixel Color App',
     depthTitle: 'Colour depth (bits per pixel)',
     depth1: '1 bit',
     depth3: '3 bits',
@@ -50,7 +50,7 @@ const translations = {
     closeHelp: 'Close help',
   },
   es: {
-    title: 'Explorador del color de píxeles binarios',
+    title: 'Pixel Color App',
     depthTitle: 'Profundidad de color (bits por píxel)',
     depth1: '1 bit',
     depth3: '3 bits',
