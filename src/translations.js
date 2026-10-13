@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    title: 'Binary Pixel Colour Explorer',
+    title: 'Pixel Colour',
     depthTitle: 'Colour depth (bits per pixel)',
     depth1: '1 bit',
     depth3: '3 bits',
