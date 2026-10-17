@@ -24,6 +24,11 @@ test('the brand title stays untranslated and the subtitle switches language', ()
   assert.equal(getTranslations('es').subtitle, '¡Vamos a pintar el píxel!');
 });
 
+test('the GitHub source link has an accessible name in each language', () => {
+  assert.equal(getTranslations('en').sourceLink, 'View the source code on GitHub');
+  assert.equal(getTranslations('es').sourceLink, 'Ver el código fuente en GitHub');
+});
+
 test('editor guidance and reachable validation errors are available in both languages', () => {
   for (const locale of ['en', 'es']) {
     const text = getTranslations(locale);

@@ -32,6 +32,7 @@ const helpOpen = document.querySelector('#help-open');
 const helpDialog = document.querySelector('#help-dialog');
 const helpClose = document.querySelector('#help-close');
 const helpMode = document.querySelector('#help-mode');
+const sourceLink = document.querySelector('#source-link');
 const pickerDialog = document.querySelector('#picker-dialog');
 const hueRing = document.querySelector('#picker-hue');
 const saturationInput = document.querySelector('#picker-saturation');
@@ -162,6 +163,7 @@ function renderLanguage() {
   languageToggle.textContent = text.languageTarget;
   languageToggle.setAttribute('aria-label', text.languageAction);
   helpOpen.setAttribute('aria-label', text.helpButton);
+  sourceLink.setAttribute('aria-label', text.sourceLink);
   helpMode.textContent = text[`help${state.depth}`];
   // Only rewrite on change so the polite live region is not re-announced on every picker move.
   const countLabel = colourCountLabel(language, state.depth);

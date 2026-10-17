@@ -1,4 +1,8 @@
-# Binary Pixel Colour Explorer
+# Colour Depth App
+
+Let's paint the pixel!
+
+Created by Manuel Giraldo Carro.
 
 Explore how binary switches change RGB light and the resulting pixel. The single-page app supports English and Spanish, with 1-, 3-, 8- and 24-bit colour depths.
 
@@ -22,3 +26,7 @@ Click the pixel (or focus it and press Enter or Space) to open the circular colo
 ## Check the app
 
 Run `npm test` for the colour model, wiring and translations. For syntax checks, run `node --check src/app.js`, `node --check src/translations.js` and `node --check scripts/dev-server.js`. In a browser, check switch output at each depth, keyboard focus, language changes with bits on, help in both languages, and layout at narrow widths or zoom. No external dependencies are required.
+
+## Copyright
+
+Copyright © 2026 Manuel Giraldo Carro.
