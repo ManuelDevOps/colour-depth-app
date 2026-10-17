@@ -86,11 +86,11 @@ test('unsupported locales cannot silently show mismatched language content', () 
   assert.throws(() => switchDescription('fr', 'red', 1, 1, false), RangeError);
 });
 
-test('visible switch states use localized words rather than binary digits', () => {
+test('visible switch faces keep ON and OFF untranslated in every language', () => {
   assert.equal(switchStateLabel('en', true), 'ON');
   assert.equal(switchStateLabel('en', false), 'OFF');
-  assert.equal(switchStateLabel('es', true), 'ENCENDIDO');
-  assert.equal(switchStateLabel('es', false), 'APAGADO');
+  assert.equal(switchStateLabel('es', true), 'ON');
+  assert.equal(switchStateLabel('es', false), 'OFF');
   assert.throws(() => switchStateLabel('fr', true), RangeError);
 });
 

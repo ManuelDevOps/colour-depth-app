@@ -59,17 +59,17 @@ const translations = {
     resultTitle: 'Píxel resultante',
     rgbLabel: 'Color RGB:',
     hexLabel: 'Color hexadecimal:',
-    editHint: 'Edite un valor y pulse Enter o salga del campo para aplicarlo. Pulse Escape para restaurarlo.',
+    editHint: 'Edita un valor y pulsa Enter o sal del campo para aplicarlo. Pulsa Escape para restaurarlo.',
     editTitle: 'Editar el color del píxel',
     redInput: 'Rojo (R), de 0 a 255',
     greenInput: 'Verde (G), de 0 a 255',
     blueInput: 'Azul (B), de 0 a 255',
     hexInput: 'Color hexadecimal, #RRGGBB',
-    rgbError: 'Introduzca un número entero entre 0 y 255.',
-    hexError: 'Introduzca seis dígitos hexadecimales con el formato #RRGGBB.',
+    rgbError: 'Introduce un número entero entre 0 y 255.',
+    hexError: 'Introduce seis dígitos hexadecimales con el formato #RRGGBB.',
     pickerOpen: 'Elegir el color del píxel',
     pickerTitle: 'Elegir el color del píxel',
-    pickerInstructions: 'Los cambios se aplican de forma inmediata. Arrastre o toque el anillo de tono, o use las teclas de flecha (Mayús para 10°), Home (0°) y End (359°). Ajuste la saturación y el brillo con los deslizadores. Cierre o pulse Escape para conservar el color y volver al píxel.',
+    pickerInstructions: 'Los cambios se aplican de forma inmediata. Arrastra o toca el anillo de tono, o usa las teclas de flecha (Mayús para 10°), Home (0°) y End (359°). Ajusta la saturación y el brillo con los deslizadores. Cierra o pulsa Escape para conservar el color y volver al píxel.',
     pickerHue: 'Tono',
     pickerSaturation: 'Saturación',
     pickerBrightness: 'Brillo',
@@ -91,7 +91,7 @@ const translations = {
     helpButton: 'Ayuda',
     helpTitle: 'Cómo funciona el explorador',
     helpGeneral: 'Cada interruptor representa un bit binario: 0 significa apagado y 1, encendido. Los bits determinan la intensidad de las luces roja, verde y azul y el color final del píxel. Más bits permiten más colores. Al cambiar la profundidad, todos los interruptores vuelven a 0.',
-    helpPicker: 'Active el píxel con un clic, Enter o la barra espaciadora para abrir el selector de color. El tono, la saturación y el brillo actualizan los interruptores binarios, RGB y HEX de inmediato, con la menor profundidad de color exacta. Abrir el selector no cambia el color. Al elegir un tono desde negro o gris, la saturación o el brillo que estén en cero se restauran para que el color sea visible.',
+    helpPicker: 'Activa el píxel con un clic, Enter o la barra espaciadora para abrir el selector de color. El tono, la saturación y el brillo actualizan los interruptores binarios, RGB y HEX de inmediato, con la menor profundidad de color exacta. Abrir el selector no cambia el color. Al elegir un tono desde negro o gris, la saturación o el brillo que estén en cero se restauran para que el color sea visible.',
     helpModeTitle: 'Profundidad de color actual',
     help1: '1 bit: El único interruptor controla los tres canales a la vez. 0 produce un píxel negro y 1, uno blanco. Hay 2 colores posibles.',
     help3: '3 bits (RGB111): Un bit controla cada canal: rojo, verde y azul. Cada canal vale 0 o 255, lo que permite 8 colores.',
@@ -108,10 +108,10 @@ export function getTranslations(locale) {
   return translations[locale];
 }
 
-/** Visible labels share the accessible state vocabulary, with switch-face casing. */
+/** Visible switch faces keep ON and OFF in every language; they are a design label, not prose. */
 export function switchStateLabel(locale, enabled) {
-  const text = getTranslations(locale);
-  return (enabled ? text.on : text.off).toUpperCase();
+  getTranslations(locale);
+  return enabled ? 'ON' : 'OFF';
 }
 
 export function switchDescription(locale, channel, position, width, enabled) {
