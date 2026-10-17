@@ -7,6 +7,7 @@ const translations = {
     depth3: '3 bits',
     depth8: '8 bits',
     depth24: '24 bits',
+    colours: 'colours',
     resultTitle: 'Resulting pixel',
     rgbLabel: 'RGB colour:',
     hexLabel: 'Hexadecimal colour:',
@@ -58,6 +59,7 @@ const translations = {
     depth3: '3 bits',
     depth8: '8 bits',
     depth24: '24 bits',
+    colours: 'colores',
     resultTitle: 'Píxel resultante',
     rgbLabel: 'Color RGB:',
     hexLabel: 'Color hexadecimal:',
@@ -125,6 +127,15 @@ export function switchDescription(locale, channel, position, width, enabled) {
   return locale === 'es'
     ? `Bit ${position} de ${width} de ${channelName}, ${enabled ? text.on : text.off}`
     : `${text[channel]} bit ${position} of ${width}, ${enabled ? text.on : text.off}`;
+}
+
+const numberLocales = { en: 'en-GB', es: 'es-ES' };
+
+/** Number of colours a depth can display (2 to the power of its bits), grouped per locale. */
+export function colourCountLabel(locale, bits) {
+  const text = getTranslations(locale);
+  if (![1, 3, 8, 24].includes(bits)) throw new RangeError('Unsupported colour depth.');
+  return `${new Intl.NumberFormat(numberLocales[locale]).format(2 ** bits)} ${text.colours}`;
 }
 
 export function pixelDescription(locale, hex) {

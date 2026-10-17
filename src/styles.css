@@ -97,6 +97,24 @@ h2 {
 
 .depth-options { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; }
 
+/* The colour count sits beside the depth buttons without moving them off centre. */
+.depth-row { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; }
+
+.depth-count {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + .9rem);
+  margin: 0;
+  padding: .3rem .75rem;
+  border: 1px solid #a9bddb;
+  border-radius: 999px;
+  background: #f8fbff;
+  font-size: .9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
 .depth-option { position: relative; cursor: pointer; }
 
 .depth-option input {
@@ -498,6 +516,8 @@ h2 {
 }
 
 @media (max-width: 760px) {
+  /* No room beside the buttons: show the colour count directly below them. */
+  .depth-count { position: static; width: fit-content; margin: .6rem auto 0; transform: none; }
   .bit-group[data-width="8"] .bit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -625,6 +645,14 @@ h1 { color: var(--plum); }
 .depth-option:nth-child(3) span { background: #d3ebff; }
 .depth-option:nth-child(4) span { background: #ffd6e5; }
 .depth-option:hover span { border-color: var(--plum); }
+
+/* Colour count: a lilac sticker; informational, so no hover or pressed look. */
+.depth-count {
+  border-color: var(--lilac-edge);
+  background: var(--lilac);
+  color: var(--plum);
+  box-shadow: 0 3px 0 #7046c255;
+}
 
 /* Selected depth: dark fill, inner yellow ring and a tick badge, not colour alone. */
 .depth-option input:checked + span {

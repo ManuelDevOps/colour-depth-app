@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getTranslations, pixelDescription, switchDescription, switchStateLabel } from '../src/translations.js';
+import { colourCountLabel, getTranslations, pixelDescription, switchDescription, switchStateLabel } from '../src/translations.js';
 
 test('English and Spanish provide every interface and help key', () => {
   const en = getTranslations('en');
@@ -99,6 +99,19 @@ test('visible switch faces keep ON and OFF untranslated in every language', () =
   assert.equal(switchStateLabel('es', true), 'ON');
   assert.equal(switchStateLabel('es', false), 'OFF');
   assert.throws(() => switchStateLabel('fr', true), RangeError);
+});
+
+test('the colour count shows 2 to the power of the selected depth in each language', () => {
+  assert.equal(colourCountLabel('en', 1), '2 colours');
+  assert.equal(colourCountLabel('en', 3), '8 colours');
+  assert.equal(colourCountLabel('en', 8), '256 colours');
+  assert.equal(colourCountLabel('en', 24), '16,777,216 colours');
+  assert.equal(colourCountLabel('es', 1), '2 colores');
+  assert.equal(colourCountLabel('es', 3), '8 colores');
+  assert.equal(colourCountLabel('es', 8), '256 colores');
+  assert.equal(colourCountLabel('es', 24), '16.777.216 colores');
+  assert.throws(() => colourCountLabel('fr', 8), RangeError);
+  assert.throws(() => colourCountLabel('en', 16), RangeError);
 });
 
 test('accessible names distinguish all RGB888 bit positions without visible captions', () => {

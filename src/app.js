@@ -1,7 +1,7 @@
 import { calculateColour, changeColourDepth, colourStateFromHex, colourStateFromRgb, createColourState } from './colour-model.js';
 import { hueFromPoint, hsvToRgb, rgbToHsv } from './colour-picker-model.js';
 import { renderWiring } from './wiring.js';
-import { getTranslations, pixelDescription, switchDescription, switchStateLabel } from './translations.js';
+import { colourCountLabel, getTranslations, pixelDescription, switchDescription, switchStateLabel } from './translations.js';
 
 const channelNames = ['red', 'green', 'blue'];
 const channelKeys = ['r', 'g', 'b'];
@@ -14,6 +14,7 @@ const widthsByDepth = {
 };
 
 const depthInputs = document.querySelectorAll('input[name="depth"]');
+const depthCount = document.querySelector('#depth-count');
 const switchGroups = document.querySelector('#switch-groups');
 const swatch = document.querySelector('#pixel-swatch');
 const hexInput = document.querySelector('#edit-hex');
@@ -162,6 +163,9 @@ function renderLanguage() {
   languageToggle.setAttribute('aria-label', text.languageAction);
   helpOpen.setAttribute('aria-label', text.helpButton);
   helpMode.textContent = text[`help${state.depth}`];
+  // Only rewrite on change so the polite live region is not re-announced on every picker move.
+  const countLabel = colourCountLabel(language, state.depth);
+  if (depthCount.textContent !== countLabel) depthCount.textContent = countLabel;
   editorInputs.forEach((input, index) => {
     input.setAttribute('aria-label', text[['redInput', 'greenInput', 'blueInput', 'hexInput'][index]]);
   });
