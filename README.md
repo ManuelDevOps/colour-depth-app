@@ -6,6 +6,10 @@ Created by Manuel Giraldo Carro.
 
 Explore how binary switches change RGB light and the resulting pixel. The single-page app supports English and Spanish, with 1-, 3-, 8- and 24-bit colour depths.
 
+## Live site
+
+https://colourdepth.applications4education.com
+
 ## Run locally
 
 1. Install Node.js (no packages or `npm install` are needed).
