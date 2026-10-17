@@ -62,10 +62,17 @@ body { margin: 0; }
 #help-close { margin-top: .5rem; }
 
 h1 {
-  margin: 0 0 1.25rem;
+  margin: 0 0 .2rem;
   color: #162c61;
   font-size: clamp(1.5rem, 3vw, 2.35rem);
   line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 h2 {
@@ -239,12 +246,22 @@ h2 {
 .picker-preview { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
 #picker-preview { width: 2rem; height: 2rem; border: 1px solid #829dc4; border-radius: 6px; }
 
-.colour-editor { position: relative; z-index: 3; width: min(100%, 30rem); margin: 1rem auto 0; text-align: left; }
+.colour-editor { position: relative; z-index: 3; width: min(100%, 30rem); margin: 1rem auto 0; text-align: center; }
 .colour-editor #edit-hint { margin: 0 0 .6rem; font-size: .85rem; line-height: 1.4; }
-.rgb-editor { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .45rem; }
-.colour-editor label { display: flex; flex-direction: column; min-width: 0; gap: .2rem; font-size: .85rem; font-weight: 650; }
+/* Fields are sized for their values (3 digits, #RRGGBB) and centred with their labels. */
+.rgb-editor { display: flex; flex-wrap: wrap; justify-content: center; gap: .45rem .9rem; }
+.colour-editor label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  gap: .2rem;
+  font-size: .85rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
 .colour-editor input {
-  width: 100%;
+  width: calc(6ch + .8rem + 2px);
   min-width: 0;
   min-height: 2.5rem;
   padding: .35rem .4rem;
@@ -254,10 +271,12 @@ h2 {
   color: #15233c;
   font: inherit;
   font-variant-numeric: tabular-nums;
+  text-align: center;
 }
+.colour-editor #edit-hex { width: calc(9.5ch + .8rem + 2px); }
 .colour-editor input:focus-visible { outline: 3px solid #a14900; outline-offset: 2px; }
 .colour-editor input[aria-invalid="true"] { border: 2px solid #a11b2c; }
-.hex-editor { margin-top: .5rem; }
+.hex-editor { width: fit-content; margin: .5rem auto 0; }
 .edit-error { min-height: 1.25em; margin: .35rem 0 0; color: #9b1628; font-size: .85rem; font-weight: 700; }
 
 .channels, .bits-panel { margin-top: 2rem; }
@@ -501,4 +520,240 @@ h2 {
 @media (prefers-reduced-motion: no-preference) {
   .switch-lever { transition: inset .16s ease, background-color .16s ease; }
   .bulb-glass { transition: background-color .16s ease, box-shadow .16s ease; }
+}
+
+/*
+ * Colourful theme: child-friendly visual layer approved from the design mockup.
+ * Visual properties only (colours, backgrounds, same-width borders, radii,
+ * shadows and non-layout decorations), so every themed element keeps its box.
+ * The pixel swatch, bulbs and wires are deliberately left untouched.
+ */
+
+:root {
+  --ink: #2b1a3d;          /* main text, dark plum */
+  --plum: #5a189a;         /* headings and selected states */
+  --sun: #ffd23f;          /* sunny yellow */
+  --sun-ink: #7a4b00;      /* text and borders on yellow */
+  --sky: #e3f4ff;          /* channels panel */
+  --sky-edge: #1f78b4;
+  --lilac: #f1eaff;        /* switches panel */
+  --lilac-edge: #7046c2;
+  --coral: #ff8fab;
+  --mint: #7ee0b5;
+  --neutral: #f7f7f8;      /* frame around the pixel stays neutral */
+
+  color: var(--ink);
+  /* Soft confetti dots over a warm multi-colour gradient. */
+  background:
+    radial-gradient(circle, #ff8fab99 0 3px, transparent 3.5px) 0 0 / 140px 140px,
+    radial-gradient(circle, #4cc9f099 0 3px, transparent 3.5px) 70px 40px / 140px 140px,
+    radial-gradient(circle, #ffd23fcc 0 4px, transparent 4.5px) 30px 95px / 140px 140px,
+    radial-gradient(circle, #7ee0b599 0 3px, transparent 3.5px) 105px 110px / 140px 140px,
+    linear-gradient(135deg, #fff1c9 0%, #ffe0ec 45%, #dcf1ff 100%) fixed;
+}
+
+/* Main card: sticker look with an outer ring drawn by shadows (no layout). */
+.explorer {
+  border-color: #f2b705;
+  border-radius: 32px;
+  background: #fffdf9;
+  box-shadow: 0 0 0 5px #fff, 0 0 0 8px #ffd23f, 0 18px 40px #9b5de533;
+}
+
+/* Decorative "pixel" sticker in the empty top-left corner of the header. */
+.page-header::before {
+  content: "";
+  position: absolute;
+  top: .45rem;
+  left: 0;
+  width: 3.3rem;
+  height: 1.1rem;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e63946 0 33.3%, #2a9d4b 33.3% 66.6%, #2563eb 66.6%);
+  box-shadow: 0 0 0 3px #fff, 0 3px 0 4px #2b1a3d22;
+  pointer-events: none;
+}
+
+h1, h2, .subtitle, .depth-selector legend {
+  font-family: ui-rounded, "Arial Rounded MT Bold", "Segoe UI", system-ui, sans-serif;
+}
+
+h1 { color: var(--plum); }
+.subtitle { color: #c2185b; }
+
+/* Header badges: round, bright, with a chunky sticker shadow. */
+.header-control {
+  border-radius: 999px;
+  color: var(--ink);
+}
+
+#language-toggle {
+  border-color: var(--sun-ink);
+  background: var(--sun);
+  color: #3a2600;
+  box-shadow: 0 3px 0 var(--sun-ink);
+}
+#language-toggle:hover { background: #ffe27a; }
+
+#help-open {
+  border-color: #0b6e99;
+  background: #9ee6ff;
+  color: #053b52;
+  box-shadow: 0 3px 0 #0b6e99;
+}
+#help-open:hover { background: #c4f0ff; }
+
+#help-close, #picker-close {
+  border-color: var(--lilac-edge);
+  background: var(--lilac);
+  color: var(--plum);
+  box-shadow: 0 3px 0 var(--lilac-edge);
+}
+#help-close:hover, #picker-close:hover { background: #e4d6ff; }
+
+/* Colour depth: candy pills, each with its own flavour. */
+.depth-selector legend { color: var(--plum); }
+
+.depth-option span {
+  border-color: #6b5a86;
+  border-radius: 999px;
+  color: var(--ink);
+  box-shadow: 0 3px 0 #6b5a8655;
+}
+.depth-option:nth-child(1) span { background: #fff1a8; }
+.depth-option:nth-child(2) span { background: #c9f5dc; }
+.depth-option:nth-child(3) span { background: #d3ebff; }
+.depth-option:nth-child(4) span { background: #ffd6e5; }
+.depth-option:hover span { border-color: var(--plum); }
+
+/* Selected depth: dark fill, inner yellow ring and a tick badge, not colour alone. */
+.depth-option input:checked + span {
+  border-color: #3c0f66;
+  background: var(--plum);
+  color: #fff;
+  box-shadow: inset 0 0 0 3px var(--sun), 0 3px 0 #3c0f66;
+}
+.depth-option input:checked + span::after {
+  content: "\2713" / "";
+  position: absolute;
+  top: -.5rem;
+  right: -.4rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 2px solid #3c0f66;
+  border-radius: 50%;
+  background: var(--sun);
+  color: #3a2600;
+  font-size: .8rem;
+  line-height: 1.05rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Panels: rounder corners, accent borders and offset sticker shadows. */
+.result, .channels, .bits-panel { border-radius: 24px; }
+
+.result {
+  border-color: #c99700;
+  background: var(--neutral);
+  box-shadow: 0 6px 0 #ffd23f;
+}
+.result h2 { color: var(--sun-ink); }
+
+.channels {
+  border-color: var(--sky-edge);
+  background: var(--sky);
+  box-shadow: 0 6px 0 #9ed8ff;
+}
+.channels h2 {
+  border-radius: 999px;
+  color: #0b4f7a;
+  box-shadow: 0 0 0 2px var(--sky-edge);
+}
+
+.bits-panel {
+  border-color: var(--lilac-edge);
+  background: var(--lilac);
+  box-shadow: 0 6px 0 #cbb6f5;
+}
+
+/* RGB editor fields. */
+.colour-editor input {
+  border-color: #6b5a86;
+  border-radius: 10px;
+  color: var(--ink);
+}
+
+/* Channel cards stay white (neutral behind the bulbs); accents stay R/G/B. */
+.channel {
+  border-color: #b9c6d6;
+  border-radius: 16px;
+  box-shadow: 0 3px 0 #1f78b422;
+}
+.channel-red { border-top-color: #c72c39; }
+.channel-green { border-top-color: #238048; }
+.channel-blue { border-top-color: #226ad0; }
+.channel-red > span:first-child { color: #a11b2c; }
+.channel-green > span:first-child { color: #146b38; }
+.channel-blue > span:first-child { color: #1d4fa8; }
+
+.bit-group {
+  border-color: #c4b5e3;
+  border-radius: 18px;
+  background: #fff;
+}
+.bit-group legend { border-radius: 999px; }
+.bit-group[data-channel="r"] legend { color: #a11b2c; }
+.bit-group[data-channel="g"] legend { color: #146b38; }
+.bit-group[data-channel="b"] legend { color: #1d4fa8; }
+.bit-group[data-channel="all"] { border-top-color: #6b5a86; }
+
+/* Switches: calm when OFF, warm and "lit" when ON; same dimensions. */
+.bit-switch {
+  border-color: #7a87a3;
+  border-radius: 14px;
+  background: #f4f6fb;
+  color: var(--ink);
+  box-shadow: 0 3px 0 #7a87a355;
+}
+.bit-switch:hover { border-color: var(--plum); }
+
+.bit-switch[aria-checked="true"] {
+  border-color: #b86200;
+  background: #fff3c4;
+  box-shadow: 0 0 0 2px #ffd23f, 0 0 16px #ffb70099, 0 3px 0 #b86200;
+}
+
+.switch-track { border-radius: 10px; background: #d9dfeb; }
+.switch-lever { border-radius: 7px; }
+.bit-switch[aria-checked="true"] .switch-track { border-color: #8a4b00; background: #ffe08a; }
+.bit-switch[aria-checked="true"] .switch-lever {
+  background: #ff8a00;
+  box-shadow: 0 0 8px #ffb700, 0 1px 3px #0005;
+}
+
+/* Dialogs: rainbow top stripe on white, purple-tinted backdrop. */
+#help-dialog, #picker-dialog {
+  border-color: var(--lilac-edge);
+  border-radius: 24px;
+  color: var(--ink);
+  box-shadow: 0 0 0 4px #fff, 0 0 0 7px #ffd23f;
+}
+#help-dialog {
+  background:
+    linear-gradient(90deg, #ff6b6b, #ffd23f, #06d6a0, #4cc9f0, #9b5de5) top / 100% 8px no-repeat local,
+    #fff;
+}
+#picker-dialog .picker-body {
+  background: linear-gradient(90deg, #ff6b6b, #ffd23f, #06d6a0, #4cc9f0, #9b5de5) top / 100% 8px no-repeat local;
+}
+#help-dialog::backdrop, #picker-dialog::backdrop { background: #2d1b4ebf; }
+#help-dialog h2, #picker-dialog h2 { color: var(--plum); }
+.picker-footer { border-top-color: #e4d6ff; background: #faf7ff; }
+.picker-range { accent-color: var(--plum); }
+
+/* Optional playful lift; motion only when the user has not asked for less. */
+@media (prefers-reduced-motion: no-preference) {
+  .header-control, .depth-option span { transition: transform .15s ease, background-color .15s ease; }
+  .header-control:hover, .depth-option:hover span { transform: translateY(-2px); }
 }

@@ -1,6 +1,7 @@
 const translations = {
   en: {
-    title: 'Pixel Color App',
+    title: 'Colour Depth App',
+    subtitle: "Let's paint the pixel!",
     depthTitle: 'Colour depth (bits per pixel)',
     depth1: '1 bit',
     depth3: '3 bits',
@@ -50,7 +51,8 @@ const translations = {
     closeHelp: 'Close help',
   },
   es: {
-    title: 'Pixel Color App',
+    title: 'Colour Depth App',
+    subtitle: '¡Vamos a pintar el píxel!',
     depthTitle: 'Profundidad de color (bits por píxel)',
     depth1: '1 bit',
     depth3: '3 bits',

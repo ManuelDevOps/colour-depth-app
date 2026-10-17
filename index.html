@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#edf3fb">
-    <title>Pixel Color App</title>
+    <title>Colour Depth App</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 3'%3E%3Cpath fill='red' d='M0 0h1v3H0z'/%3E%3Cpath fill='lime' d='M1 0h1v3H1z'/%3E%3Cpath fill='blue' d='M2 0h1v3H2z'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="./src/styles.css">
     <script type="module" src="./src/app.js"></script>
@@ -12,7 +12,8 @@
   <body>
     <main class="explorer">
       <header class="page-header">
-        <h1 data-i18n="title">Pixel Color App</h1>
+        <h1 data-i18n="title">Colour Depth App</h1>
+        <p class="subtitle" data-i18n="subtitle">Let's paint the pixel!</p>
         <div class="header-actions">
           <button id="language-toggle" class="header-control" type="button" aria-label="Switch to Spanish">ES</button>
           <button id="help-open" class="header-control" type="button" aria-label="Help" aria-haspopup="dialog" aria-controls="help-dialog">?</button>
@@ -38,9 +39,9 @@
             <h3 id="edit-title" class="sr-only" data-i18n="editTitle">Edit pixel colour</h3>
             <p id="edit-hint" data-i18n="editHint">Edit a value, then press Enter or leave the field to apply it. Press Escape to restore it.</p>
             <div class="rgb-editor">
-              <label><span data-i18n="red">Red</span> (R)<input id="edit-r" aria-label="Red (R), 0 to 255" type="number" min="0" max="255" step="1" inputmode="numeric" value="0"></label>
-              <label><span data-i18n="green">Green</span> (G)<input id="edit-g" aria-label="Green (G), 0 to 255" type="number" min="0" max="255" step="1" inputmode="numeric" value="0"></label>
-              <label><span data-i18n="blue">Blue</span> (B)<input id="edit-b" aria-label="Blue (B), 0 to 255" type="number" min="0" max="255" step="1" inputmode="numeric" value="0"></label>
+              <label><span><span data-i18n="red">Red</span> (R)</span><input id="edit-r" aria-label="Red (R), 0 to 255" type="number" min="0" max="255" step="1" inputmode="numeric" value="0"></label>
+              <label><span><span data-i18n="green">Green</span> (G)</span><input id="edit-g" aria-label="Green (G), 0 to 255" type="number" min="0" max="255" step="1" inputmode="numeric" value="0"></label>
+              <label><span><span data-i18n="blue">Blue</span> (B)</span><input id="edit-b" aria-label="Blue (B), 0 to 255" type="number" min="0" max="255" step="1" inputmode="numeric" value="0"></label>
             </div>
             <label class="hex-editor"><span data-i18n="hexLabel">Hexadecimal colour:</span><input id="edit-hex" aria-label="Hexadecimal colour, #RRGGBB" type="text" inputmode="text" spellcheck="false" autocomplete="off" maxlength="7" placeholder="#000000" value="#000000"></label>
             <p id="edit-error" class="edit-error" role="alert" aria-live="assertive"></p>

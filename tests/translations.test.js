@@ -17,6 +17,13 @@ test('English and Spanish provide every interface and help key', () => {
   assert.match(es.helpGeneral, /0.*1/s);
 });
 
+test('the brand title stays untranslated and the subtitle switches language', () => {
+  assert.equal(getTranslations('en').title, 'Colour Depth App');
+  assert.equal(getTranslations('es').title, 'Colour Depth App');
+  assert.equal(getTranslations('en').subtitle, "Let's paint the pixel!");
+  assert.equal(getTranslations('es').subtitle, '¡Vamos a pintar el píxel!');
+});
+
 test('editor guidance and reachable validation errors are available in both languages', () => {
   for (const locale of ['en', 'es']) {
     const text = getTranslations(locale);
