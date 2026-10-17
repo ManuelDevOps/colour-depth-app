@@ -30,3 +30,7 @@ Run `npm test` for the colour model, wiring and translations. For syntax checks,
 ## Copyright
 
 Copyright © 2026 Manuel Giraldo Carro.
+
+## License
+
+Licensed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). Schools, teachers, students and anyone else may use, copy and adapt it free of charge for any noncommercial purpose; commercial use is not permitted. See [LICENSE](LICENSE).
