@@ -103,12 +103,8 @@ h2 {
 .depth-count {
   position: absolute;
   top: 50%;
-  left: calc(100% + .9rem);
+  left: calc(100% + 1.75rem);
   margin: 0;
-  padding: .3rem .75rem;
-  border: 1px solid #a9bddb;
-  border-radius: 999px;
-  background: #f8fbff;
   font-size: .9rem;
   font-weight: 700;
   white-space: nowrap;
@@ -647,12 +643,8 @@ h1 { color: var(--plum); }
 .depth-option:hover span { border-color: var(--plum); }
 
 /* Colour count: a lilac sticker; informational, so no hover or pressed look. */
-.depth-count {
-  border-color: var(--lilac-edge);
-  background: var(--lilac);
-  color: var(--plum);
-  box-shadow: 0 3px 0 #7046c255;
-}
+/* Plain figure, not a pill, so it is not mistaken for a depth button. */
+.depth-count { color: var(--plum); }
 
 /* Selected depth: dark fill, inner yellow ring and a tick badge, not colour alone. */
 .depth-option input:checked + span {
