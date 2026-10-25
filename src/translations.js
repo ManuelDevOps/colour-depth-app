@@ -50,7 +50,6 @@ const translations = {
     help8: '8 bits (RGB332): Three bits control red, three green and two blue, giving 256 direct colours. Blue has fewer levels because reduced blue precision is generally less noticeable. RGB332 is one common historical direct-colour convention, not the only 8-bit format; indexed colour also existed and is outside this explorer.',
     help24: '24 bits (RGB888): Eight bits control each channel. Each channel ranges from 0 to 255, giving 16,777,216 possible colours.',
     closeHelp: 'Close help',
-    sourceLink: 'View the source code on GitHub',
   },
   es: {
     title: 'Colour Depth App',
@@ -103,7 +102,6 @@ const translations = {
     help8: '8 bits (RGB332): Tres bits controlan el rojo, tres el verde y dos el azul, lo que permite 256 colores directos. El azul tiene menos niveles porque la pérdida de precisión en ese canal suele notarse menos. RGB332 es una convención histórica habitual de color directo, no el único formato de 8 bits; también existió el color indexado, que queda fuera de este explorador.',
     help24: '24 bits (RGB888): Ocho bits controlan cada canal. Cada canal puede valer entre 0 y 255, lo que permite 16.777.216 colores.',
     closeHelp: 'Cerrar ayuda',
-    sourceLink: 'Ver el código fuente en GitHub',
   },
 };
 

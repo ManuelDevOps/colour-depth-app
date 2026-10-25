@@ -533,6 +533,40 @@ h2 {
   .bit-switch { padding: .25rem 0; }
 }
 
+/* Save vertical space in typical laptop browser windows without hiding controls. */
+@media (min-width: 1000px) and (max-height: 1150px) {
+  .explorer {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - 3rem);
+    margin: 1.5rem auto;
+    padding: .8rem;
+    border-radius: 18px;
+  }
+  .header-actions { position: absolute; top: 0; right: 0; margin: 0; }
+  .subtitle { margin-bottom: .7rem; }
+  .depth-selector { margin-bottom: .8rem; }
+  .depth-selector legend { margin-bottom: .4rem; }
+  .depth-option span { min-height: 2.5rem; padding: .4rem .7rem; }
+  .result, .channels, .bits-panel { padding: .8rem; border-radius: 14px; }
+  .channels { padding: 1rem .8rem; }
+  .result h2 { margin-bottom: .45rem; }
+  .pixel-swatch { width: 7.5rem; border-width: 4px; }
+  .colour-editor #edit-hint { margin-bottom: .4rem; }
+  .channels, .bits-panel { margin-top: .8rem; }
+  .channels h2 { margin-bottom: .5rem; }
+  .channel { gap: .35rem; padding: .6rem .3rem; }
+  .bulb { width: 3rem; height: 4rem; }
+  .bulb-filament::before, .bulb-filament::after { height: .85rem; }
+  .bit-group { padding: .45rem .3rem; }
+  .switch-groups { gap: .5rem; }
+  .bit-switch { min-height: 6rem; gap: .25rem; padding: .3rem .1rem; }
+  .switch-track { width: 1.5rem; height: 2rem; }
+  .switch-lever { height: .8rem; }
+  .bit-state { min-height: 3em; }
+  .explorer > .app-footer { margin-top: auto; padding-top: .5rem; }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .switch-lever { transition: inset .16s ease, background-color .16s ease; }
   .bulb-glass { transition: background-color .16s ease, box-shadow .16s ease; }
@@ -778,7 +812,7 @@ h1 { color: var(--plum); }
   .header-control:hover, .depth-option:hover span { transform: translateY(-2px); }
 }
 
-/* Footer: copyright and a GitHub link after all the content, so nothing above it moves. */
+/* Footer: copyright after all the content, so nothing above it moves. */
 .app-footer {
   display: flex;
   justify-content: center;
@@ -789,14 +823,3 @@ h1 { color: var(--plum); }
   font-size: .9rem;
   font-weight: 650;
 }
-.source-link {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  color: var(--plum);
-}
-.source-link:hover { background: var(--lilac); }
-.source-link:focus-visible { outline: 3px solid #a14900; outline-offset: 2px; }

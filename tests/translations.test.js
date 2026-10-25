@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { colourCountLabel, getTranslations, pixelDescription, switchDescription, switchStateLabel } from '../src/translations.js';
 
 test('English and Spanish provide every interface and help key', () => {
@@ -24,9 +25,13 @@ test('the brand title stays untranslated and the subtitle switches language', ()
   assert.equal(getTranslations('es').subtitle, '¡Vamos a pintar el píxel!');
 });
 
-test('the GitHub source link has an accessible name in each language', () => {
-  assert.equal(getTranslations('en').sourceLink, 'View the source code on GitHub');
-  assert.equal(getTranslations('es').sourceLink, 'Ver el código fuente en GitHub');
+test('the footer omits the GitHub source link in all locales', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.equal(html.includes('id="source-link"'), false);
+  assert.equal(html.includes('github.com/ManuelDevOps/colour-depth-app'), false);
+  for (const locale of ['en', 'es']) {
+    assert.equal(Object.hasOwn(getTranslations(locale), 'sourceLink'), false);
+  }
 });
 
 test('editor guidance and reachable validation errors are available in both languages', () => {
