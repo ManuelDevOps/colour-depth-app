@@ -1,5 +1,8 @@
 wrangler.jsonc
 .assetsignore
+.git/
+.wrangler/
+.playwright-mcp/
 README.md
 scripts/
 tests/
