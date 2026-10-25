@@ -28,6 +28,8 @@ const bulbElements = channelKeys.map((key) => document.querySelector(`[data-bulb
 const diagram = document.querySelector('#diagram');
 const wiring = document.querySelector('#wiring');
 const languageToggle = document.querySelector('#language-toggle');
+const themeToggle = document.querySelector('#theme-toggle');
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const helpOpen = document.querySelector('#help-open');
 const helpDialog = document.querySelector('#help-dialog');
 const helpClose = document.querySelector('#help-close');
@@ -45,6 +47,13 @@ try {
   if (sessionStorage.getItem('colour-explorer-language') === 'es') language = 'es';
 } catch {
   // The explorer still works when browser storage is disabled.
+}
+
+let theme = 'colourful';
+try {
+  if (sessionStorage.getItem('colour-explorer-theme') === 'cyber') theme = 'cyber';
+} catch {
+  // The theme still switches when browser storage is disabled.
 }
 
 let wiringFrame = 0;
@@ -152,6 +161,12 @@ hexInput.addEventListener('focus', () => {
   }
 });
 
+function renderThemeToggleLabel(text = getTranslations(language)) {
+  const label = text[theme === 'cyber' ? 'themeStandard' : 'themeCyber'];
+  themeToggle.textContent = label;
+  themeToggle.setAttribute('aria-label', label);
+}
+
 function renderLanguage() {
   const text = getTranslations(language);
   document.documentElement.lang = language;
@@ -159,6 +174,7 @@ function renderLanguage() {
   document.querySelectorAll('[data-i18n]').forEach((element) => {
     element.textContent = text[element.dataset.i18n];
   });
+  renderThemeToggleLabel(text);
   languageToggle.textContent = text.languageTarget;
   languageToggle.setAttribute('aria-label', text.languageAction);
   helpOpen.setAttribute('aria-label', text.helpButton);
@@ -314,6 +330,33 @@ languageToggle.addEventListener('click', () => {
   renderLanguage();
 });
 
+function loadCyberFonts() {
+  if (document.querySelector('#cyber-fonts')) return;
+  const link = document.createElement('link');
+  link.id = 'cyber-fonts';
+  link.rel = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap';
+  link.addEventListener('load', () => { document.fonts.ready.then(scheduleWiring); }, { once: true });
+  document.head.append(link);
+}
+
+function renderTheme() {
+  document.documentElement.dataset.theme = theme;
+  renderThemeToggleLabel();
+  themeColorMeta.content = theme === 'cyber' ? '#03090B' : '#edf3fb';
+  if (theme === 'cyber') loadCyberFonts();
+}
+
+themeToggle.addEventListener('click', () => {
+  theme = theme === 'cyber' ? 'colourful' : 'cyber';
+  try {
+    sessionStorage.setItem('colour-explorer-theme', theme);
+  } catch {
+    // Storage restrictions must not prevent switching themes.
+  }
+  renderTheme();
+});
+
 helpOpen.addEventListener('click', () => helpDialog.showModal());
 helpClose.addEventListener('click', () => helpDialog.close());
 helpDialog.addEventListener('close', () => helpOpen.focus());
@@ -420,6 +463,7 @@ pickerDialog.addEventListener('close', () => {
   swatch.focus();
 });
 
+renderTheme();
 renderSwitches();
 renderLanguage();
 

@@ -138,3 +138,12 @@ test('accessible names distinguish all RGB888 bit positions without visible capt
     }
   }
 });
+
+test('the theme toggle label identifies its target theme in both languages', () => {
+  const en = getTranslations('en');
+  const es = getTranslations('es');
+  assert.equal(en.themeCyber, 'Cyber theme');
+  assert.equal(en.themeStandard, 'Standard theme');
+  assert.equal(es.themeCyber, 'Tema cibernético');
+  assert.equal(es.themeStandard, 'Tema estándar');
+});
