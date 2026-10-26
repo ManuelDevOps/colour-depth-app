@@ -178,9 +178,9 @@ h2 {
   opacity: .65;
 }
 
-.wire-r { stroke: #c32b46; }
-.wire-g { stroke: #25804b; }
-.wire-b { stroke: #2863be; }
+.wire-r { stroke: #ff0000; }
+.wire-g { stroke: #00ff00; }
+.wire-b { stroke: #0000ff; }
 
 .result { background: #f6f9fe; }
 .result h2 { margin-bottom: .65rem; }
@@ -1060,9 +1060,9 @@ h1 { color: var(--plum); }
 :root[data-theme="cyber"] .bit-switch[aria-checked="true"] .bit-digit { color: #e8ff00; }
 
 :root[data-theme="cyber"] .wire { opacity: .85; }
-:root[data-theme="cyber"] .wire-r { stroke: #ff657a; }
-:root[data-theme="cyber"] .wire-g { stroke: #54d98b; }
-:root[data-theme="cyber"] .wire-b { stroke: #68a0ff; }
+:root[data-theme="cyber"] .wire-r { stroke: #ff0000; }
+:root[data-theme="cyber"] .wire-g { stroke: #00ff00; }
+:root[data-theme="cyber"] .wire-b { stroke: #0000ff; }
 
 :root[data-theme="cyber"] .colour-editor {
   font-family: "Rajdhani", "Arial Narrow", sans-serif;
