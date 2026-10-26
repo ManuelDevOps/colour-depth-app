@@ -824,6 +824,9 @@ h1 { color: var(--plum); }
   font-weight: 650;
 }
 
+.app-footer small { font-size: inherit; }
+.app-footer a { color: inherit; }
+
 /* Original cyberpunk skin using MDeveloping's documented design tokens. */
 :root[data-theme="cyber"] {
   color-scheme: dark;
