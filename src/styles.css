@@ -520,9 +520,12 @@ h2 {
 @media (max-width: 560px) {
   .explorer { width: min(100% - 1rem, 1040px); margin: .5rem auto; padding: .85rem; }
   .result, .channels, .bits-panel { padding: .85rem .5rem; }
-  .switch-groups { grid-template-columns: minmax(0, 1fr); width: min(100%, 28rem); justify-items: center; }
-  .bit-group { width: calc(100% - 2.5rem); }
-  .bit-group[data-width="8"] .bit-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  /* Keep one column per channel under its bulb, with compact switches two to a row. */
+  .switch-groups { gap: .5rem; }
+  .bit-group { padding: .5rem .25rem; }
+  .bit-grid,
+  .bit-group[data-width="8"] .bit-grid { grid-template-columns: repeat(2, minmax(0, 3rem)); justify-content: center; }
+  .bit-group[data-width="1"] .bit-grid { grid-template-columns: minmax(0, 3rem); }
   .channel { padding: .55rem .1rem; font-size: .85rem; }
   .channel-values { gap: .3rem; }
 }

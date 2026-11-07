@@ -77,21 +77,3 @@ test('each bulb connects from its top edge to the same resulting pixel', () => {
     assertRoute(path, bulbs[channel].top, pixel);
   }
 });
-
-test('narrow side rails route each bit around the stack without changing its bulb', () => {
-  const bit = { x: 25, y: 300 };
-  const stacked = buildWirePaths([{
-    channel: 'all',
-    bits: [bit],
-    rails: { r: 2, g: 4, b: 98 },
-  }], bulbs, pixel);
-  const wide = buildWirePaths([{ channel: 'all', bits: [bit] }], bulbs, pixel);
-
-  for (const [index, channel] of ['r', 'g', 'b'].entries()) {
-    assert.equal(stacked[index].channel, channel);
-    assertRoute(stacked[index].path, bit, bulbs[channel].bottom);
-    assert.ok(stacked[index].path.includes(` L ${[2, 4, 98][index]} 134 `));
-    assert.ok(!wide[index].path.includes(' L '), 'Wide routes should not use side rails');
-  }
-  assert.deepEqual(stacked.slice(-3), wide.slice(-3), 'Side rails must not alter bulb-to-pixel routes');
-});
