@@ -1,6 +1,7 @@
 import { calculateColour, changeColourDepth, colourStateFromHex, colourStateFromRgb, createColourState } from './colour-model.js';
 import { hueFromPoint, hsvToRgb, rgbToHsv } from './colour-picker-model.js';
 import { renderWiring } from './wiring.js';
+import { initialTheme } from './theme.js';
 import { colourCountLabel, getTranslations, pixelDescription, switchDescription, switchStateLabel } from './translations.js';
 
 const channelNames = ['red', 'green', 'blue'];
@@ -49,12 +50,7 @@ try {
   // The explorer still works when browser storage is disabled.
 }
 
-let theme = 'colourful';
-try {
-  if (sessionStorage.getItem('colour-explorer-theme') === 'cyber') theme = 'cyber';
-} catch {
-  // The theme still switches when browser storage is disabled.
-}
+let theme = initialTheme();
 
 let wiringFrame = 0;
 
